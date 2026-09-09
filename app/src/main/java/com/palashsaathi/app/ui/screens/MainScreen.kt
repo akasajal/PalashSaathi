@@ -34,7 +34,7 @@ enum class AppTab(
 ) {
     VOICE("बोलें", "Voice", Icons.Default.Mic),
     WORKSHEET("अभ्यास", "Worksheet", Icons.Default.Description),
-    CARDS("फ्लैशकार्ड", "Cards", Icons.Default.Style),
+    FLASHCARDS("फ्लैशकार्ड", "Cards", Icons.Default.Style),
     PHRASEBOOK("वाक्य", "Vocab", Icons.Default.MenuBook),
     SETTINGS("सेटिंग्स", "Settings", Icons.Default.Settings);
 
