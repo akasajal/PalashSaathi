@@ -3,9 +3,11 @@ package com.palashsaathi.app.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -14,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -176,109 +179,220 @@ fun WorksheetScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Text(
-            text = "द्विभाषी अभ्यास पत्र (FLN Worksheet Generator)",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "Generate printable Hindi <-> Santali worksheets with Ol Chiki and Devanagari offline.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        // Grade Selector
-        Text(
-            text = "कक्षा (Grade Level):",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        // Child & Teacher-friendly header
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            FLNGrade.values().forEach { grade ->
-                FilterChip(
-                    selected = selectedGrade == grade,
-                    onClick = { selectedGrade = grade },
-                    label = { Text(grade.label) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primary,
-                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+            Surface(
+                shape = androidx.compose.foundation.shape.CircleShape,
+                color = MaterialTheme.colorScheme.secondaryContainer,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.Description,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.size(22.dp)
                     )
+                }
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Column {
+                Text(
+                    text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                        "Printable Worksheets"
+                    else
+                        "अभ्यास पत्र (Worksheets)",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                        "Create fun printable sheets for your students"
+                    else
+                        "छात्रों के लिए प्रिंट योग्य संथाली अभ्यास पत्र",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Category Selector
+        // Friendly Grade Selector with Visual Big Number Cards
         Text(
-            text = "विषय (FLN Category):",
+            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Select Grade:" else "कक्षा चुनें (Grade):",
             fontWeight = FontWeight.SemiBold,
-            fontSize = 14.sp,
+            fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onBackground
         )
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            FLNGrade.values().forEach { grade ->
+                val isSelected = selectedGrade == grade
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { selectedGrade = grade }
+                        .border(
+                            1.dp,
+                            if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                            RoundedCornerShape(16.dp)
+                        )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(vertical = 10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = when (grade) {
+                                FLNGrade.GRADE_1 -> "1"
+                                FLNGrade.GRADE_2 -> "2"
+                                FLNGrade.GRADE_3 -> "3"
+                            },
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) {
+                                when (grade) {
+                                    FLNGrade.GRADE_1 -> "Grade 1"
+                                    FLNGrade.GRADE_2 -> "Grade 2"
+                                    FLNGrade.GRADE_3 -> "Grade 3"
+                                }
+                            } else {
+                                when (grade) {
+                                    FLNGrade.GRADE_1 -> "कक्षा 1"
+                                    FLNGrade.GRADE_2 -> "कक्षा 2"
+                                    FLNGrade.GRADE_3 -> "कक्षा 3"
+                                }
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f) else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // Visual Category Selector with Icons
+        Text(
+            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Topic:" else "विषय (Topic):",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(6.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(vertical = 6.dp),
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             listOf(
-                FLNCategory.NUMERACY to "संख्या (Numeracy)",
-                FLNCategory.LITERACY to "भाषा (Literacy)",
-                FLNCategory.CLASSROOM_COMMANDS to "निर्देश (Commands)",
-                FLNCategory.CORPUS_READING to "20K वाक्य (Corpus Reading)",
-                FLNCategory.CORPUS_VOCAB to "20K शब्द (Corpus Vocab)"
-            ).forEach { (cat, label) ->
+                Triple(FLNCategory.NUMERACY, if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Numbers" else "संख्या (Numbers)", Icons.Default.Calculate),
+                Triple(FLNCategory.LITERACY, if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Words" else "भाषा (Words)", Icons.Default.MenuBook),
+                Triple(FLNCategory.CLASSROOM_COMMANDS, if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Commands" else "निर्देश (Commands)", Icons.Default.RecordVoiceOver),
+                Triple(FLNCategory.CORPUS_READING, if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Reading" else "वाक्य (Reading)", Icons.Default.AutoStories),
+                Triple(FLNCategory.CORPUS_VOCAB, if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "20K Vocab" else "20K शब्द (Vocab)", Icons.Default.Translate)
+            ).forEach { (cat, label, icon) ->
                 FilterChip(
                     selected = selectedCategory == cat,
                     onClick = { selectedCategory = cat },
                     label = { Text(label) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    },
+                    shape = RoundedCornerShape(20.dp),
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.secondary,
-                        selectedLabelColor = MaterialTheme.colorScheme.onSecondary
+                        selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Live Worksheet Preview Card
+        // Classroom Notebook-style Worksheet Preview
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp)),
+                .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), RoundedCornerShape(18.dp)),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            shape = RoundedCornerShape(12.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(18.dp)
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                // Header of preview
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.secondaryContainer
+                    ) {
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "A4 Print Ready" else "प्रिंट-रेडी A4",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                     Text(
-                        text = "वर्कशीट पूर्वावलोकन (Preview)",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
+                        text = "Palash Saathi • FLN",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Badge(containerColor = MaterialTheme.colorScheme.secondaryContainer) {
-                        Text("A4 Print Ready", color = MaterialTheme.colorScheme.onSecondaryContainer)
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Student details line mockup
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Name: _______________" else "नाम: _______________",
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Date: _________" else "दिनांक: _________",
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     text = currentWorksheet.getTitle(languageMode),
                     style = MaterialTheme.typography.titleMedium,
@@ -289,52 +403,95 @@ fun WorksheetScreen(
                     text = if (currentScript == ScriptType.OL_CHIKI) currentWorksheet.titleSantaliOlChiki else currentWorksheet.titleSantaliDevanagari,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
 
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 10.dp),
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
                 )
 
+                // Exercises formatted as clear visual cards with multiple choice bubbles
                 currentWorksheet.exercises.forEachIndexed { i, ex ->
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(vertical = 6.dp)
                     ) {
-                        Text(
-                            text = "${i + 1}. ",
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Icon(
-                            imageVector = ex.icon,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier
-                                .size(22.dp)
-                                .padding(end = 6.dp)
-                        )
-                        Column(modifier = Modifier.weight(1f)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = androidx.compose.foundation.shape.CircleShape,
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                modifier = Modifier.size(24.dp)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text(
+                                        text = "${i + 1}",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = ex.icon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = ex.getQuestion(languageMode),
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
                             )
-                            Text(
-                                text = "संथाली: ${if (currentScript == ScriptType.OL_CHIKI) ex.questionSantaliOlChiki else ex.questionSantaliDevanagari}",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                        }
+
+                        // Santali subtitle
+                        Text(
+                            text = if (currentScript == ScriptType.OL_CHIKI) ex.questionSantaliOlChiki else ex.questionSantaliDevanagari,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(start = 32.dp, top = 2.dp)
+                        )
+
+                        // Option bubbles for interactive child worksheet feel
+                        if (ex.options.isNotEmpty()) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, top = 6.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                ex.options.forEach { opt ->
+                                    Surface(
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                        border = androidx.compose.foundation.BorderStroke(0.5.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                                    ) {
+                                        Text(
+                                            text = opt,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         // Generate and Export Button
         Button(
@@ -343,33 +500,45 @@ fun WorksheetScreen(
                 try {
                     val pdfFile = WorksheetPdfGenerator.generatePdf(context, currentWorksheet, languageMode)
                     generatedPdfPath = pdfFile.absolutePath
-                    Toast.makeText(context, "PDF तैयार हो गया: ${pdfFile.name}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "PDF Generated: ${pdfFile.name}" else "PDF तैयार हो गया: ${pdfFile.name}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 } catch (e: Exception) {
-                    Toast.makeText(context, "त्रुटि: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Error: ${e.message}" else "त्रुटि: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } finally {
                     isGenerating = false
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(12.dp),
+                .height(54.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
             Icon(
                 imageVector = Icons.Default.PictureAsPdf,
                 contentDescription = "Export PDF",
-                tint = MaterialTheme.colorScheme.onSecondary
+                tint = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = if (isGenerating) "PDF तैयार हो रहा है..." else "प्रिंट-रेडी PDF डाउनलोड करें (Export PDF)",
+                text = if (isGenerating) {
+                    if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Generating PDF..." else "PDF तैयार हो रहा है..."
+                } else {
+                    if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Export Printable PDF" else "प्रिंट-रेडी PDF डाउनलोड करें"
+                },
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -378,10 +547,10 @@ fun WorksheetScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -391,7 +560,7 @@ fun WorksheetScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "सहेजा गया: $generatedPdfPath",
+                        text = "${if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Saved: " else "सहेजा गया: "}$generatedPdfPath",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )

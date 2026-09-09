@@ -1,21 +1,24 @@
 package com.palashsaathi.app.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,24 +52,50 @@ fun FlashcardsScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        Text(
-            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
-                "Visual Flashcards (English to Santali)"
-            else
-                "चित्र व शब्द फ्लैशकार्ड (Santali Visual Flashcards)",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "Tap the speaker icon to hear authentic Santali pronunciation offline.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        // Child-friendly header
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.Style,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Column {
+                Text(
+                    text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                        "Visual Flashcards"
+                    else
+                        "चित्र व शब्द फ्लैशकार्ड",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                        "Tap any card to hear Santali pronunciation"
+                    else
+                        "संथाली सुनने के लिए किसी भी कार्ड को छुएं",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(14.dp))
 
-        // Filter chips: All, Numeracy, Literacy, 20K Corpus Vocab
+        // Visual Filter Chips: All, Numeracy, Literacy, 20K Corpus Vocab
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
@@ -76,7 +105,15 @@ fun FlashcardsScreen(
             FilterChip(
                 selected = selectedFilter == null,
                 onClick = { selectedFilter = null },
-                label = { Text("सभी (All)") },
+                label = { Text(if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "All" else "सभी (All)") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Apps,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                shape = RoundedCornerShape(20.dp),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -85,7 +122,15 @@ fun FlashcardsScreen(
             FilterChip(
                 selected = selectedFilter == FLNCategory.NUMERACY,
                 onClick = { selectedFilter = FLNCategory.NUMERACY },
-                label = { Text("संख्या (Numeracy)") },
+                label = { Text(if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Numeracy" else "संख्या (Numbers)") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Calculate,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                shape = RoundedCornerShape(20.dp),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -94,7 +139,15 @@ fun FlashcardsScreen(
             FilterChip(
                 selected = selectedFilter == FLNCategory.LITERACY,
                 onClick = { selectedFilter = FLNCategory.LITERACY },
-                label = { Text("भाषा (Literacy)") },
+                label = { Text(if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Literacy" else "भाषा (Words)") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.MenuBook,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                shape = RoundedCornerShape(20.dp),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -103,7 +156,15 @@ fun FlashcardsScreen(
             FilterChip(
                 selected = selectedFilter == FLNCategory.CORPUS_VOCAB,
                 onClick = { selectedFilter = FLNCategory.CORPUS_VOCAB },
-                label = { Text("20K शब्द (Corpus Vocab)") },
+                label = { Text(if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "20K Vocab" else "20K शब्द (Vocab)") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Translate,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                shape = RoundedCornerShape(20.dp),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -138,13 +199,21 @@ fun FlashcardCard(
     languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI,
     onSpeak: () -> Unit
 ) {
+    var showDialects by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp)),
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onSpeak() }
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.outline.copy(alpha = 0.25f),
+                RoundedCornerShape(20.dp)
+            ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(14.dp)
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(
             modifier = Modifier
@@ -152,17 +221,25 @@ fun FlashcardCard(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Illustration Icon
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.getSourceWord(languageMode),
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(vertical = 4.dp)
-            )
+            // Visual Hero Icon with soft circular backdrop (kid-friendly)
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
+                modifier = Modifier.size(60.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.getSourceWord(languageMode),
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(34.dp)
+                    )
+                }
+            }
 
-            // Primary Source Word based on Language Mode
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Primary Source Word
             Text(
                 text = item.getSourceWord(languageMode),
                 style = MaterialTheme.typography.titleMedium,
@@ -171,68 +248,37 @@ fun FlashcardCard(
                 textAlign = TextAlign.Center
             )
 
-            // Secondary source language reference
-            val secondaryText = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) item.hindiWord else item.englishWord
-            if (secondaryText.isNotBlank()) {
-                Text(
-                    text = secondaryText,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            if (item.category == FLNCategory.CORPUS_VOCAB) {
-                Spacer(modifier = Modifier.height(2.dp))
-                Surface(
-                    color = MaterialTheme.colorScheme.secondaryContainer,
-                    shape = RoundedCornerShape(4.dp)
-                ) {
-                    Text(
-                        text = "20K Dataset",
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Santali Word in Ol Chiki or Devanagari
+            // Santali Script (Big, prominent, easy to read for children)
             Text(
                 text = if (currentScript == ScriptType.OL_CHIKI) item.santaliOlChiki else item.santaliDevanagari,
-                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
+                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 22.sp),
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
 
-            Text(
-                text = "उच्चारण: ${item.santaliPhonetic}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
+            Spacer(modifier = Modifier.height(4.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Subtitle chips for Ho & Mundari
+            // Child-friendly pronunciation pill badge
             Surface(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(6.dp),
-                modifier = Modifier.fillMaxWidth()
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Column(modifier = Modifier.padding(6.dp)) {
-                    Text(
-                        text = "हो: ${item.hoSubtitle}",
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Hearing,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(13.dp)
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "मुण्डारी: ${item.mundariSubtitle}",
-                        fontSize = 11.sp,
+                        text = item.santaliPhonetic,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -240,21 +286,67 @@ fun FlashcardCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Audio button
+            // Prominent 44dp Audio Button
             FilledIconButton(
                 onClick = onSpeak,
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(44.dp),
                 shape = CircleShape,
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             ) {
                 Icon(
                     imageVector = Icons.Default.VolumeUp,
                     contentDescription = "Pronounce Santali",
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(22.dp)
                 )
+            }
+
+            // Collapsible Dialects Drawer (keeps cards clean while offering teacher comparative data)
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { showDialects = !showDialects }
+                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (showDialects) "Hide Dialects" else "Ho / Mundari",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Icon(
+                    imageVector = if (showDialects) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+
+            AnimatedVisibility(visible = showDialects) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                ) {
+                    Column(modifier = Modifier.padding(6.dp)) {
+                        Text(
+                            text = "Ho: ${item.hoSubtitle}",
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = "Mundari: ${item.mundariSubtitle}",
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }

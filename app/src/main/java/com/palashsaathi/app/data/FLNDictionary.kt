@@ -424,8 +424,8 @@ object FLNDictionary {
                     targetSantaliOlChiki = corpusMatch.santaliOlChiki,
                     targetSantaliDevanagari = corpusMatch.santaliDevanagari.ifBlank { corpusMatch.santaliOlChiki },
                     targetSantaliPhonetic = corpusMatch.santaliPhonetic,
-                    subtitleHo = "हो: ${corpusMatch.santaliPhonetic}",
-                    subtitleMundari = "मुण्डारी: ${corpusMatch.santaliPhonetic}",
+                    subtitleHo = "Ho: ${corpusMatch.santaliPhonetic}",
+                    subtitleMundari = "Mundari: ${corpusMatch.santaliPhonetic}",
                     latencyMs = 210L,
                     fromCorpus = true
                 )
@@ -436,10 +436,10 @@ object FLNDictionary {
                 sourceHindi = input,
                 sourceEnglish = input,
                 targetSantaliOlChiki = "ᱚᱞ ᱪᱤᱠᱤ: $input",
-                targetSantaliDevanagari = "संथाली अनुवाद: $input",
+                targetSantaliDevanagari = "Santali: $input",
                 targetSantaliPhonetic = "Santali: $input",
-                subtitleHo = "हो: $input",
-                subtitleMundari = "मुण्डारी: $input",
+                subtitleHo = "Ho: $input",
+                subtitleMundari = "Mundari: $input",
                 latencyMs = 380L
             )
         } else {

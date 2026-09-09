@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import com.palashsaathi.app.data.model.GeneratedWorksheet
+import com.palashsaathi.app.data.model.LanguagePairMode
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -21,7 +22,7 @@ object WorksheetPdfGenerator {
     fun generatePdf(
         context: Context,
         worksheet: GeneratedWorksheet,
-        languageMode: com.palashsaathi.app.data.model.LanguagePairMode = com.palashsaathi.app.data.model.LanguagePairMode.HINDI_TO_SANTALI
+        languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI
     ): File {
         val document = PdfDocument()
 
@@ -66,7 +67,7 @@ object WorksheetPdfGenerator {
         var y = 40f
 
         // Title & Header
-        val headerTitle = if (languageMode == com.palashsaathi.app.data.model.LanguagePairMode.ENGLISH_TO_SANTALI)
+        val headerTitle = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
             "PalashSaathi - FLN Bilingual Worksheet (English <-> Santali)"
         else
             "PalashSaathi - FLN Bilingual Worksheet (द्विभाषी अभ्यास पत्र)"
@@ -74,20 +75,28 @@ object WorksheetPdfGenerator {
         y += 20f
         canvas.drawText("${worksheet.getTitle(languageMode)}  |  ${worksheet.titleSantaliDevanagari} (${worksheet.titleSantaliOlChiki})", 40f, y, paintSubHeader)
         y += 15f
-        canvas.drawText("Level: ${worksheet.grade.label}  •  Category: ${worksheet.category.label}", 40f, y, paintSubHeader)
+        canvas.drawText("Level: ${worksheet.grade.getLabel(languageMode)}  •  Category: ${worksheet.category.getLabel(languageMode)}", 40f, y, paintSubHeader)
         y += 15f
 
         // Date and Student info line
         val dateStr = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(worksheet.generatedTimestamp))
         canvas.drawLine(40f, y, 555f, y, paintLine)
         y += 18f
-        canvas.drawText("विद्यार्थी का नाम (Name): ______________________   तारीख (Date): $dateStr", 40f, y, paintBody)
+        val studentInfoText = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+            "Student Name: ______________________   Date: $dateStr"
+        else
+            "विद्यार्थी का नाम (Name): ______________________   तारीख (Date): $dateStr"
+        canvas.drawText(studentInfoText, 40f, y, paintBody)
         y += 20f
         canvas.drawLine(40f, y, 555f, y, paintLine)
         y += 30f
 
         // Exercises Section
-        canvas.drawText("अभ्यास प्रश्न (Exercises):", 40f, y, paintBold)
+        val exercisesHeaderText = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+            "Exercises:"
+        else
+            "अभ्यास प्रश्न (Exercises):"
+        canvas.drawText(exercisesHeaderText, 40f, y, paintBold)
         y += 25f
 
         worksheet.exercises.forEachIndexed { index, exercise ->
@@ -102,14 +111,17 @@ object WorksheetPdfGenerator {
             canvas.drawText("$num. ${exercise.getQuestion(languageMode)}", 50f, y + 5f, paintBold)
 
             // Question in Santali (Devanagari + Ol Chiki representation)
-            canvas.drawText("   संथाली (Santali): ${exercise.questionSantaliDevanagari}  •  ${exercise.questionSantaliOlChiki}", 50f, y + 22f, paintBody)
+            val santaliLabel = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Santali: " else "संथाली (Santali): "
+            canvas.drawText("   $santaliLabel${exercise.questionSantaliDevanagari}  •  ${exercise.questionSantaliOlChiki}", 50f, y + 22f, paintBody)
 
             // Hint & Answer line
-            canvas.drawText("   संकेत (Hint): ${exercise.getHint(languageMode)} / ${exercise.hintSantali}", 50f, y + 36f, paintSubHeader)
+            val hintLabel = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Hint: " else "संकेत (Hint): "
+            canvas.drawText("   $hintLabel${exercise.getHint(languageMode)} / ${exercise.hintSantali}", 50f, y + 36f, paintSubHeader)
 
             // Answer checkbox or write area
             canvas.drawRect(470f, y - 5f, 545f, y + 30f, paintBox)
-            canvas.drawText("उत्तर (Ans)", 480f, y + 16f, paintSubHeader)
+            val ansLabel = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Ans" else "उत्तर (Ans)"
+            canvas.drawText(ansLabel, 480f, y + 16f, paintSubHeader)
 
             y += boxHeight + 15f
         }

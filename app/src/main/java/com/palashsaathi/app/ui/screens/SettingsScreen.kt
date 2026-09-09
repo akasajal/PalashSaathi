@@ -38,7 +38,7 @@ fun SettingsScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "सेटिंग्स (Settings)",
+            text = if (currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Settings" else "सेटिंग्स (Settings)",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
@@ -61,7 +61,7 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "दिखावट (Appearance)",
+                text = if (currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Appearance" else "दिखावट (Appearance)",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -86,7 +86,8 @@ fun SettingsScreen(
                     description = "Follows your tablet / phone OS system setting",
                     icon = Icons.Default.BrightnessAuto,
                     isSelected = currentThemeMode == AppThemeMode.SYSTEM,
-                    onClick = { onThemeModeChanged(AppThemeMode.SYSTEM) }
+                    onClick = { onThemeModeChanged(AppThemeMode.SYSTEM) },
+                    languageMode = currentLanguageMode
                 )
 
                 HorizontalDivider(
@@ -100,7 +101,8 @@ fun SettingsScreen(
                     description = "High-contrast daylight mode for classroom teaching",
                     icon = Icons.Default.LightMode,
                     isSelected = currentThemeMode == AppThemeMode.LIGHT,
-                    onClick = { onThemeModeChanged(AppThemeMode.LIGHT) }
+                    onClick = { onThemeModeChanged(AppThemeMode.LIGHT) },
+                    languageMode = currentLanguageMode
                 )
 
                 HorizontalDivider(
@@ -114,7 +116,8 @@ fun SettingsScreen(
                     description = "Low-glare dark surface for reduced eye strain",
                     icon = Icons.Default.DarkMode,
                     isSelected = currentThemeMode == AppThemeMode.DARK,
-                    onClick = { onThemeModeChanged(AppThemeMode.DARK) }
+                    onClick = { onThemeModeChanged(AppThemeMode.DARK) },
+                    languageMode = currentLanguageMode
                 )
             }
         }
@@ -131,7 +134,7 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "अनुवाद भाषा मोड (Translation Mode)",
+                text = if (currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Translation Mode" else "अनुवाद भाषा मोड (Translation Mode)",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -156,7 +159,8 @@ fun SettingsScreen(
                     description = "Hindi speech & prompts translate into Santali",
                     icon = Icons.Default.Translate,
                     isSelected = currentLanguageMode == LanguagePairMode.HINDI_TO_SANTALI,
-                    onClick = { onLanguageModeChanged(LanguagePairMode.HINDI_TO_SANTALI) }
+                    onClick = { onLanguageModeChanged(LanguagePairMode.HINDI_TO_SANTALI) },
+                    languageMode = currentLanguageMode
                 )
 
                 HorizontalDivider(
@@ -170,7 +174,8 @@ fun SettingsScreen(
                     description = "English speech & prompts match directly with 20K corpus",
                     icon = Icons.Default.Language,
                     isSelected = currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI,
-                    onClick = { onLanguageModeChanged(LanguagePairMode.ENGLISH_TO_SANTALI) }
+                    onClick = { onLanguageModeChanged(LanguagePairMode.ENGLISH_TO_SANTALI) },
+                    languageMode = currentLanguageMode
                 )
             }
         }
@@ -242,8 +247,12 @@ fun SettingsOptionRow(
     description: String,
     icon: ImageVector,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI
 ) {
+    val primaryTitle = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) titleEnglish else titleHindi
+    val secondaryTitle = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "($titleHindi)" else "($titleEnglish)"
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -264,14 +273,14 @@ fun SettingsOptionRow(
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = titleHindi,
+                    text = primaryTitle,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "($titleEnglish)",
+                    text = secondaryTitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
