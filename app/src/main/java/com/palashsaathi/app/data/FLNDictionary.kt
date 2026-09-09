@@ -211,6 +211,145 @@ object FLNDictionary {
             mundariSubtitle = "चेँड़े (Chende)",
             category = FLNCategory.LITERACY,
             icon = Icons.Default.FlutterDash
+        ),
+
+        // --- 20K Corpus Dataset Vocabulary Flashcards ---
+        FlashcardItem(
+            id = "corp_book",
+            hindiWord = "किताब / पुस्तक (Book)",
+            santaliOlChiki = "ᱯᱚᱛᱚᱵ",
+            santaliDevanagari = "पोतोब",
+            santaliPhonetic = "Potob",
+            hoSubtitle = "पोथी (Pothi)",
+            mundariSubtitle = "पुथी (Puthi)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.MenuBook
+        ),
+        FlashcardItem(
+            id = "corp_learn",
+            hindiWord = "सीखना / शिक्षा (Learn)",
+            santaliOlChiki = "ᱥᱮᱬᱟᱭᱟ",
+            santaliDevanagari = "सेणाया",
+            santaliPhonetic = "Senaya",
+            hoSubtitle = "इतु (Itu)",
+            mundariSubtitle = "इतु (Itu)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.School
+        ),
+        FlashcardItem(
+            id = "corp_page",
+            hindiWord = "पन्ना / पृष्ठ (Page)",
+            santaliOlChiki = "ᱥᱟᱠᱟᱢ",
+            santaliDevanagari = "साकाम",
+            santaliPhonetic = "Sakam",
+            hoSubtitle = "साकाम (Sakam)",
+            mundariSubtitle = "साकाम (Sakam)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.Description
+        ),
+        FlashcardItem(
+            id = "corp_image",
+            hindiWord = "चित्र / तस्वीर (Picture)",
+            santaliOlChiki = "ᱪᱤᱛᱟᱹᱨ",
+            santaliDevanagari = "चितार",
+            santaliPhonetic = "Chitar",
+            hoSubtitle = "चिती (Chiti)",
+            mundariSubtitle = "चिती (Chiti)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.Image
+        ),
+        FlashcardItem(
+            id = "corp_hand",
+            hindiWord = "हाथ (Hand / Arm)",
+            santaliOlChiki = "ᱛᱤ",
+            santaliDevanagari = "ती",
+            santaliPhonetic = "Ti",
+            hoSubtitle = "ती (Ti)",
+            mundariSubtitle = "ती (Ti)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.PanTool
+        ),
+        FlashcardItem(
+            id = "corp_body",
+            hindiWord = "शरीर / देह (Body)",
+            santaliOlChiki = "ᱦᱚᱲᱢᱚ",
+            santaliDevanagari = "होड़मो",
+            santaliPhonetic = "Hormo",
+            hoSubtitle = "होड़मो (Hormo)",
+            mundariSubtitle = "होड़मो (Hormo)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.Person
+        ),
+        FlashcardItem(
+            id = "corp_river",
+            hindiWord = "नदी (River)",
+            santaliOlChiki = "ᱜᱟᱰᱟ",
+            santaliDevanagari = "गाडा",
+            santaliPhonetic = "Gada",
+            hoSubtitle = "गाड़ा (Gada)",
+            mundariSubtitle = "गाड़ा (Gada)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.Water
+        ),
+        FlashcardItem(
+            id = "corp_gold",
+            hindiWord = "सोना / स्वर्ण (Gold)",
+            santaliOlChiki = "ᱥᱟᱢᱟᱱᱚᱢ",
+            santaliDevanagari = "सामानोम",
+            santaliPhonetic = "Samanom",
+            hoSubtitle = "सोना (Sona)",
+            mundariSubtitle = "सोना (Sona)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.Stars
+        ),
+        FlashcardItem(
+            id = "corp_write",
+            hindiWord = "लिखना (Write / Script)",
+            santaliOlChiki = "ᱚᱞ",
+            santaliDevanagari = "ओल",
+            santaliPhonetic = "Ol",
+            hoSubtitle = "ओल (Ol)",
+            mundariSubtitle = "ओल (Ol)",
+            category = FLNCategory.CORPUS_VOCAB,
+            icon = Icons.Default.Edit
+        )
+    )
+
+    val CORPUS_FEATURED_SENTENCES = listOf(
+        com.palashsaathi.app.data.model.CorpusSentence(
+            id = 45842,
+            english = "Many books specialise in the details of particular software.",
+            santaliOlChiki = "ᱟᱭᱢᱟ ᱯᱚᱛᱚᱵ ᱠᱚᱜᱮ ᱵᱤᱥᱟᱹᱥ ᱥᱚᱯᱷᱴᱳᱣᱮᱨ ᱨᱮᱭᱟᱜ ᱵᱚᱨᱱᱚᱱ ᱨᱮ ᱠᱚ ᱜᱟᱹᱠᱷᱩᱲᱟ ᱾",
+            santaliDevanagari = "आयमा पोतोब कोगे बिसास सॉफ्टवेर रेयाग बोरनोन रे को गाखूड़ा।",
+            santaliPhonetic = "Ayma potob koge bisas software reyag bornon re ko gakura."
+        ),
+        com.palashsaathi.app.data.model.CorpusSentence(
+            id = 115842,
+            english = "These three teach the basics of page layout design on desktop systems.",
+            santaliOlChiki = "ᱱᱚᱣᱟ ᱯᱮᱭᱟ ᱰᱮᱥᱠᱴᱚᱯ ᱫᱚ ᱥᱤᱥᱴᱟᱢ ᱨᱮ ᱥᱟᱠᱟᱢ ᱞᱮ ᱟᱣᱩᱴ ᱰᱤᱡᱟᱭᱤᱱ ᱨᱮᱭᱟᱜ ᱢᱩᱲᱩᱫ ᱥᱟᱛᱟᱢ ᱠᱚᱭ ᱥᱮᱬᱟᱭᱟ ᱾",
+            santaliDevanagari = "नोवा पेया डेस्कटॉप दो सिस्टम रे साकाम ले आउउट डिजायिन रेयाग मुड़ुद साताम कोय सेणाया।",
+            santaliPhonetic = "Nowa peya desktop do system re sakam layout design reyag murud satam koy senaya."
+        ),
+        com.palashsaathi.app.data.model.CorpusSentence(
+            id = 205842,
+            english = "An arm is an upper limb of the body.",
+            santaliOlChiki = "ᱮ ᱟᱨ ᱮᱢ ᱫᱚ ᱢᱤᱫᱴᱟᱝ ᱛᱤ ᱨᱮᱭᱟᱜ ᱢᱤᱫᱯᱟᱦᱚᱴᱟ ᱫᱚ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ ᱦᱚᱲᱢᱚ ᱨᱮᱭᱟᱜ ᱢᱤᱫᱴᱟᱝ ᱪᱮᱛᱟᱱ ᱨᱮᱭᱟᱜ ᱦᱤᱸᱥ ᱾",
+            santaliDevanagari = "ए आर एम दो मिदटांग ती रेयाग मिदपाहटा दो हुयुग काना होड़मो रेयाग मिदटांग चेतान रेयाग हिंस।",
+            santaliPhonetic = "ARM do midtang ti reyag midpahota do huyug kana hormo reyag midtang chetan reyag hins."
+        ),
+        com.palashsaathi.app.data.model.CorpusSentence(
+            id = 445842,
+            english = "Alluvial gold was discovered in and along the river in 1851.",
+            santaliOlChiki = "᱑᱘᱕᱑ ᱥᱟᱞ ᱨᱮ ᱜᱟᱰᱟᱨᱮ ᱟᱨ ᱚᱱᱟ ᱥᱩᱨ ᱨᱮ ᱯᱚᱞᱤ ᱦᱟᱥᱟ ᱥᱟᱢᱟᱱᱚᱢ ᱢᱩᱫᱟᱹᱢ ᱥᱤᱨᱡᱟᱹᱣ ᱞᱮᱱᱟ ᱾",
+            santaliDevanagari = "१८५१ साल रे गाडारे आर ओना सुर रे पोली हासा सामानोम मुदाम सिरजाव लेना।",
+            santaliPhonetic = "1851 sal re gadare ar ona sur re poli hasa samanom mudam sirjaw lena."
+        ),
+        com.palashsaathi.app.data.model.CorpusSentence(
+            id = 155842,
+            english = "He wrote 70 books and 293 printed scholarly publications.",
+            santaliOlChiki = "ᱩᱱᱤ ᱫᱚ ᱗᱐ ᱜᱚᱴᱟᱝ ᱯᱚᱛᱚᱵ ᱟᱨ ᱒᱙᱓ ᱜᱚᱴᱟᱝ ᱪᱷᱟᱯᱟᱣᱟᱠᱟᱱ ᱵᱟᱹᱲᱛᱤ ᱯᱚᱱᱰᱤᱛ ᱟᱱᱟᱜ ᱩᱪᱷᱟᱹᱱᱮ ᱚᱞ ᱟᱠᱟᱫᱟ ᱾",
+            santaliDevanagari = "उनि दो ७० गोटांग पोतोब आर २९३ गोटांग छापावाकान बाड़ती पंडित आनाग उछाने ओल आकादा।",
+            santaliPhonetic = "Uni do 70 gotang potob ar 293 gotang chapawakan barti pondit anag uchane ol akada."
         )
     )
 

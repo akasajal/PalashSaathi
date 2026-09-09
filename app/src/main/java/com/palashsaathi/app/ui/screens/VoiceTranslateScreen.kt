@@ -47,6 +47,26 @@ fun VoiceTranslateScreen(
         label = "scale"
     )
 
+    val translationPool = remember {
+        val list = mutableListOf<TranslationResult>()
+        list.addAll(FLNDictionary.CLASSROOM_ENTRIES)
+        list.addAll(
+            FLNDictionary.CORPUS_FEATURED_SENTENCES.map { s ->
+                TranslationResult(
+                    sourceHindi = s.english,
+                    targetSantaliOlChiki = s.santaliOlChiki,
+                    targetSantaliDevanagari = s.santaliDevanagari,
+                    targetSantaliPhonetic = s.santaliPhonetic,
+                    subtitleHo = "हो: ${s.santaliPhonetic}",
+                    subtitleMundari = "मुण्डारी: ${s.santaliPhonetic}",
+                    latencyMs = 210L,
+                    fromCorpus = true
+                )
+            }
+        )
+        list
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -103,7 +123,7 @@ fun VoiceTranslateScreen(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Teacher Speech Input Card (Hindi)
+        // Teacher Speech Input Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -120,7 +140,7 @@ fun VoiceTranslateScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "शिक्षक की आवाज़ (Teacher Voice - Hindi):",
+                        text = if (currentResult.fromCorpus) "शिक्षक / अभ्यास वाक्य (Teacher Speech / Corpus):" else "शिक्षक की आवाज़ (Teacher Voice - Hindi):",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.SemiBold
@@ -134,7 +154,7 @@ fun VoiceTranslateScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = recognizedHindi,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 24.sp),
+                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
@@ -158,8 +178,8 @@ fun VoiceTranslateScreen(
                             delay(1200) // simulate teacher speech
                             isListening = false
                             isTranslating = true
-                            delay(300) // sub-300ms offline neural inference
-                            val nextEntry = FLNDictionary.CLASSROOM_ENTRIES.random()
+                            delay(250) // sub-300ms offline inference
+                            val nextEntry = translationPool.random()
                             recognizedHindi = nextEntry.sourceHindi
                             currentResult = nextEntry
                             isTranslating = false
@@ -184,7 +204,7 @@ fun VoiceTranslateScreen(
         }
 
         Text(
-            text = if (isListening) "आवाज़ रिकॉर्ड हो रही है..." else if (isTranslating) "अनुवाद हो रहा है..." else "बोलने के लिए माइक दबाएँ (Push to Talk)",
+            text = if (isListening) "आवाज़ रिकॉर्ड हो रही है..." else if (isTranslating) "20K कोष से अनुवाद हो रहा है..." else "बोलने के लिए माइक दबाएँ (Push to Talk)",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.Medium,
@@ -218,7 +238,7 @@ fun VoiceTranslateScreen(
                         if (currentResult.fromCorpus) {
                             Spacer(modifier = Modifier.width(6.dp))
                             Badge(containerColor = MaterialTheme.colorScheme.secondary) {
-                                Text("20K Corpus", color = MaterialTheme.colorScheme.onSecondary, fontSize = 10.sp)
+                                Text("20K Dataset", color = MaterialTheme.colorScheme.onSecondary, fontSize = 10.sp)
                             }
                         }
                     }
@@ -239,7 +259,7 @@ fun VoiceTranslateScreen(
                 // Ol Chiki / Devanagari text based on current toggle
                 Text(
                     text = if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliOlChiki else currentResult.targetSantaliDevanagari,
-                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp),
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -328,9 +348,9 @@ fun VoiceTranslateScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        // Quick Teacher Prompts Chips
+        // Section 1: Quick Teacher Prompts
         Text(
-            text = "त्वरित कक्षा निर्देश (Quick Teacher Commands)",
+            text = "त्वरित कक्षा निर्देश (Classroom Commands)",
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -338,7 +358,7 @@ fun VoiceTranslateScreen(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        FLNDictionary.CLASSROOM_ENTRIES.take(4).forEach { item ->
+        FLNDictionary.CLASSROOM_ENTRIES.take(3).forEach { item ->
             OutlinedCard(
                 onClick = {
                     recognizedHindi = item.sourceHindi
@@ -347,7 +367,7 @@ fun VoiceTranslateScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                    .padding(vertical = 3.dp),
                 colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(10.dp)
             ) {
@@ -358,7 +378,7 @@ fun VoiceTranslateScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = item.sourceHindi,
                             fontWeight = FontWeight.Bold,
@@ -374,6 +394,82 @@ fun VoiceTranslateScreen(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Play",
                         tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // Section 2: 20K Dataset Featured Sentences Showcase
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Dataset,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = "20K वाक्य कोष से उदाहरण (Corpus Sentences)",
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        FLNDictionary.CORPUS_FEATURED_SENTENCES.take(3).forEach { sentence ->
+            OutlinedCard(
+                onClick = {
+                    recognizedHindi = sentence.english
+                    currentResult = TranslationResult(
+                        sourceHindi = sentence.english,
+                        targetSantaliOlChiki = sentence.santaliOlChiki,
+                        targetSantaliDevanagari = sentence.santaliDevanagari,
+                        targetSantaliPhonetic = sentence.santaliPhonetic,
+                        subtitleHo = "हो: ${sentence.santaliPhonetic}",
+                        subtitleMundari = "मुण्डारी: ${sentence.santaliPhonetic}",
+                        latencyMs = 190L,
+                        fromCorpus = true
+                    )
+                    onSpeakSantaliAudio(sentence.santaliPhonetic, sentence.santaliDevanagari)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 3.dp),
+                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = sentence.english,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = if (currentScript == ScriptType.OL_CHIKI) sentence.santaliOlChiki else sentence.santaliDevanagari,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = "Play",
+                        tint = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

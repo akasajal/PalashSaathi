@@ -16,7 +16,7 @@ import java.util.Locale
 object WorksheetPdfGenerator {
 
     /**
-     * Generates a printable A4 bilingual FLN worksheet (Hindi <-> Ho) in PDF format.
+     * Generates a printable A4 bilingual FLN worksheet (Hindi <-> Santali) in PDF format.
      */
     fun generatePdf(context: Context, worksheet: GeneratedWorksheet): File {
         val document = PdfDocument()

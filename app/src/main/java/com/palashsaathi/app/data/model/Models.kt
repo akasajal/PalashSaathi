@@ -28,7 +28,9 @@ enum class FLNGrade(val label: String) {
 enum class FLNCategory(val label: String) {
     NUMERACY("Numeracy (संख्या व गणित)"),
     LITERACY("Literacy (भाषा व शब्द)"),
-    CLASSROOM_COMMANDS("Classroom Prompts (कक्षा निर्देश)")
+    CLASSROOM_COMMANDS("Classroom Prompts (कक्षा निर्देश)"),
+    CORPUS_VOCAB("20K Vocab (कोष शब्दावली)"),
+    CORPUS_READING("20K Sentences (वाक्य व गद्यांश)")
 }
 
 data class FlashcardItem(

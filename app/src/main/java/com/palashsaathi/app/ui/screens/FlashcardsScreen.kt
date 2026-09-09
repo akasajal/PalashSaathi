@@ -2,7 +2,9 @@ package com.palashsaathi.app.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -59,10 +61,12 @@ fun FlashcardsScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Filter chips: All, Numeracy, Literacy
+        // Filter chips: All, Numeracy, Literacy, 20K Corpus Vocab
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
         ) {
             FilterChip(
                 selected = selectedFilter == null,
@@ -89,6 +93,15 @@ fun FlashcardsScreen(
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            )
+            FilterChip(
+                selected = selectedFilter == FLNCategory.CORPUS_VOCAB,
+                onClick = { selectedFilter = FLNCategory.CORPUS_VOCAB },
+                label = { Text("20K शब्द (Corpus Vocab)") },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             )
         }
@@ -150,6 +163,22 @@ fun FlashcardCard(
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
+
+            if (item.category == FLNCategory.CORPUS_VOCAB) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "20K Dataset",
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 

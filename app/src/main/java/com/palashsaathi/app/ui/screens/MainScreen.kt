@@ -70,7 +70,7 @@ fun MainScreen(
                             }
                         }
                         Text(
-                            text = "AI Vernacular Pedagogy • Santali (ᱥᱟᱱᱛᱟᱲᱤ)",
+                            text = "AI Vernacular Pedagogy • Santali (ᱥᱟᱱᱛᱟᱲᱤ) • 20K Corpus",
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f)
                         )
