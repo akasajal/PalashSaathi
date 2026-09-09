@@ -1,0 +1,47 @@
+PROPRIETARY & CONFIDENTIAL LICENSE
+Smart India Hackathon (SIH) 2026 Submission
+
+Copyright (c) 2026 PalashSaathi Project Contributors. All Rights Reserved.
+
+This repository, including but not limited to its source code, compiled binaries,
+software architectures, user interface designs, custom algorithms, transliteration
+matrices, acoustic models, and bundled linguistic datasets (collectively referred
+to as the "Software"), is the proprietary and confidential intellectual property
+created exclusively for the Smart India Hackathon (SIH) 2026.
+
+================================================================================
+TERMS AND RESTRICTIONS
+================================================================================
+
+1. STRICTLY PROHIBITED ACTIONS
+   Without express prior written permission from the copyright holders:
+   a. You may NOT copy, reproduce, clone, scrape, mirror, or redistribute this
+      Software or any portion thereof in any format or medium.
+   b. You may NOT modify, adapt, alter, translate, enhance, or create derivative
+      works based upon this Software or its components.
+   c. You may NOT decompile, disassemble, reverse engineer, or attempt to derive
+      the underlying algorithms, database schemas, or source files.
+   d. You may NOT use this Software, in whole or in part, for any commercial,
+      institutional, academic, or personal deployment outside the official
+      evaluation boundaries of Smart India Hackathon (SIH) 2026.
+   e. You may NOT sublicense, lease, sell, rent, or distribute this Software or
+      incorporate it into any third-party software, product, or service.
+
+2. PURPOSE AND USE LIMITATION
+   Access to this Software is granted exclusively to authorized evaluators, judges,
+   and designated administrators of the Smart India Hackathon (SIH) 2026 solely for
+   the purpose of assessment, scoring, and technical verification.
+
+3. NO IMPLIED RIGHTS
+   Nothing in this license shall be construed as conferring any license or right
+   under any copyright, patent, trademark, trade secret, or other proprietary right
+   of the authors, whether by estoppel, implication, or otherwise.
+
+4. DISCLAIMER OF WARRANTIES
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT SHALL
+   THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
+   OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
