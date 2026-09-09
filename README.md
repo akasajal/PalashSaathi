@@ -1,5 +1,6 @@
 # PalashSaathi (ᱯᱟᱞᱟᱥ ᱥᱟᱛᱷᱤ)
 
+**Smart India Hackathon (SIH) 2026**  
 **AI-Powered Vernacular Pedagogy and Real-Time Translation Tool**  
 *100% Offline Edge Runtime for Mother-Tongue-Based Multilingual Education (MTB-MLE) in Jharkhand & Eastern India*
 
@@ -9,7 +10,7 @@
 
 **PalashSaathi** is an offline, AI-assisted pedagogical companion designed for non-native primary school educators teaching in tribal and multilingual classrooms. By placing **Santali (ᱥᱟᱱᱛᱟᱲᱤ)** at the forefront—rendered natively in the **Ol Chiki (`ᱚᱞ ᱪᱤᱠᱤ`)** script alongside **Devanagari (`देवनागरी`)** phonetic transliterations—the tool bridges foundational language barriers in early education (FLN Grades 1 to 3).
 
-The application indexes a **20,000-sentence Santali-English parallel training corpus** directly on-device, providing real-time voice translation, bilingual worksheet generation, visual flashcards, and live auxiliary subtitles in **Ho** and **Mundari** without requiring any internet connection.
+The application indexes a **20,000-sentence Santali-English parallel training corpus** directly on-device, providing one-way classroom chat broadcast, real-time voice translation, bilingual worksheet generation, visual flashcards, and live auxiliary subtitles in **Ho** and **Mundari** without requiring any internet connection.
 
 ---
 
@@ -23,17 +24,28 @@ The application indexes a **20,000-sentence Santali-English parallel training co
 
 ## Core Capabilities
 
-### 1. 100% Offline Edge Operation
+### 1. One-Way Classroom Chat Mode (Teacher → Student)
+- **Classroom Broadcast Workflow**: The teacher speaks or types instructions in Hindi or English; the student receives that message in the tribal language (Santali in Ol Chiki and Devanagari).
+- **Automated Audio Broadcast**: The app automatically speaks the Santali translation out loud upon message delivery, with one-tap replay for any previous message in the continuous conversation feed.
+- **Quick Action Prompts Bar**: 1-tap horizontal chip bar for standard classroom commands (*"किताब खोलो"*, *"ध्यान से सुनो"*, *"शांत रहो"*, *"यहाँ आओ"*, *"बैठ जाओ"*, *"खड़े हो जाओ"*, *"ब्लैकबोर्ड पर देखो"*, *"शाबाश बहुत अच्छा"*, *"अपना नाम बताओ"*, *"कॉपी में लिखो"*).
+- **Student Board Fullscreen Display**: An enlarged, high-contrast display mode showing the latest tribal instruction in extra-large typography (38sp) with a giant audio play button for classroom presentation.
+- **Segmented View Mode Selector**: Seamless 1-tap toggle between **One-Way Chat** and traditional **Single-Card** translation.
+
+### 2. 100% Offline Edge Operation & Persistent Preferences
 - Runs entirely on-device on low-cost Android hardware (ARMv7/ARMv8, 2 GB RAM, Android 9.0+).
 - Requires zero internet connectivity, SIM cards, or external cloud APIs.
-- Real-time voice translation response under 300 milliseconds (well within the sub-3.0s ceiling).
+- User settings (Theme, Script, Language Mode, Dismissed Banners) persist permanently across restarts via `AppPreferencesRepository`.
 
-### 2. Primary Language: Santali (Ol Chiki & Devanagari)
+### 3. Primary Language: Santali (Ol Chiki & Devanagari)
 - Dual-script engine supports native Ol Chiki Unicode (`U+1C50` - `U+1C7F`) and Devanagari orthography.
 - One-tap global script toggle across the entire application interface.
 - Complete bidirectional phonetic engine for Ol Chiki numerals (`᱐` to `᱙`) and phonetic Romanization.
 
-### 3. 20,000 Parallel Corpus Deep Integration
+### 4. Robust Two-Tier Speech Recognition & Acoustic Fallback
+- **Headless In-App Voice Engine (`VoiceRecognitionEngine`)**: 100% in-app speech recognition without external Google dialog popups or modal activities.
+- **On-Device Acoustic Fallback (`AudioRecordEngine` + `AcousticKeywordSpotter`)**: If offline language models are absent, the app automatically fails over to native raw PCM microphone capture and acoustic feature extraction (syllable segmentation, Zero-Crossing Rate, and energy envelope matching).
+
+### 5. 20,000 Parallel Corpus Deep Integration
 - Bundled offline parallel training dataset (`santali_corpus.csv`, 20,000 sentence pairs).
 - High-performance asynchronous indexing via Kotlin Coroutines and background IO dispatchers.
 - Fast bidirectional full-text search across English, Ol Chiki, Devanagari, and Latin phonetics.
@@ -43,11 +55,11 @@ The application indexes a **20,000-sentence Santali-English parallel training co
   - **Flashcards**: Dataset vocabulary cards with pronunciation audio.
   - **Corpus Explorer**: Dedicated browser and search engine for all 20,000 sentences.
 
-### 4. Multi-Tribal Auxiliary Subtitle HUD
+### 6. Multi-Tribal Auxiliary Subtitle HUD
 - Live comparative subtitle stream in **Ho** and **Mundari** beneath every Santali phrase.
 - Facilitates cross-comprehension in diverse multi-tribal classrooms where multiple Munda languages coexist.
 
-### 5. Automated Bilingual FLN Worksheet Generator
+### 7. Automated Bilingual FLN Worksheet Generator
 - Generates curriculum-aligned printable exercises (NIPUN Bharat Grade 1-3).
 - Categories:
   - **संख्या (Numeracy)**: Counting, digit recognition, practical math.
@@ -57,12 +69,12 @@ The application indexes a **20,000-sentence Santali-English parallel training co
   - **20K शब्द (Corpus Vocab)**: Vocabulary matching and translation drills.
 - Print-ready A4 PDF export saved directly to device storage via `WorksheetPdfGenerator`.
 
-### 6. Interactive Visual Flashcards
+### 8. Interactive Visual Flashcards
 - High-contrast visual flashcards covering numeracy, literacy, and dataset vocabulary.
 - Native speech audio synthesis with one-tap pronunciation playback.
 - Visual badges highlighting dataset-derived items.
 
-### 7. WCAG AAA High-Contrast UI & Theme Switcher
+### 9. WCAG AAA High-Contrast UI & Theme Switcher
 - High-visibility color palette designed for bright rural daylight and semi-open classrooms:
   - **Primary**: Coral Saffron (`#E65100`)
   - **Secondary**: Forest Green (`#1B5E20`)
@@ -70,9 +82,9 @@ The application indexes a **20,000-sentence Santali-English parallel training co
 - Appearance preferences: System Default, Light Mode, and Dark Mode.
 - Strictly Material 3 vector iconography throughout (zero emojis).
 
-### 8. Branded Logo & Landing Synopsis
+### 10. Branded Logo & Landing Synopsis
 - Custom branded logo embodying tribal identity, folklore motifs, and linguistic heritage.
-- App startup includes a 2.4-second animated landing synopsis that smoothly fades out to the main screen.
+- App startup includes an animated landing synopsis that smoothly transitions to the main screen.
 
 ---
 
@@ -87,23 +99,28 @@ PalashSaathi/
 │   │   ├── java/com/palashsaathi/app/
 │   │   │   ├── MainActivity.kt                 # Application entry, theme initialization & corpus warm-up
 │   │   │   ├── data/
+│   │   │   │   ├── AppPreferencesRepository.kt # Persistent user preferences (Theme, Script, Language)
 │   │   │   │   ├── FLNDictionary.kt            # Curated FLN lexicon, classroom prompts & corpus subsets
 │   │   │   │   ├── SantaliCorpusRepository.kt  # Fast in-memory 20K corpus indexer and search engine
 │   │   │   │   └── model/
-│   │   │   │       └── Models.kt               # Domain models: CorpusSentence, TranslationResult, etc.
+│   │   │   │       └── Models.kt               # Domain models: ClassroomChatMessage, TranslationResult, etc.
 │   │   │   ├── engine/
-│   │   │   │   ├── OlChikiConverter.kt         # Ol Chiki <-> Devanagari transliteration & numerals
+│   │   │   │   ├── AcousticKeywordSpotter.kt   # Raw PCM acoustic syllable and ZCR classifier
+│   │   │   │   ├── AudioRecordEngine.kt        # Low-level AudioRecord PCM microphone stream engine
 │   │   │   │   ├── AudioSynthesisEngine.kt     # Low-latency acoustic speech synthesizer
+│   │   │   │   ├── DynamicTranslationEngine.kt # 4-tier offline translation engine
+│   │   │   │   ├── OlChikiConverter.kt         # Ol Chiki <-> Devanagari transliteration & numerals
+│   │   │   │   ├── VoiceRecognitionEngine.kt   # In-app headless SpeechRecognizer service
 │   │   │   │   └── WorksheetPdfGenerator.kt    # A4 printable PDF generator
 │   │   │   └── ui/
 │   │   │       ├── screens/
+│   │   │       │   ├── ClassroomChatScreen.kt  # One-Way Classroom Chat broadcast & Student Board
+│   │   │       │   ├── FlashcardsScreen.kt     # Visual flashcards with audio pronunciation
 │   │   │       │   ├── LandingSynopsisScreen.kt# Branded launch synopsis with auto fade-out
 │   │   │       │   ├── MainScreen.kt           # Navigation Scaffold, TopAppBar & script toggle
-│   │   │       │   ├── VoiceTranslateScreen.kt # Push-to-Talk voice translation & subtitle HUD
-│   │   │       │   ├── WorksheetScreen.kt      # Bilingual FLN worksheet generator & PDF export
-│   │   │       │   ├── FlashcardsScreen.kt     # Visual flashcards with audio pronunciation
 │   │   │       │   ├── PhrasebookScreen.kt     # Classroom prompts & 20K Corpus Explorer
-│   │   │       │   └── SettingsScreen.kt       # Appearance switcher & system status
+│   │   │       │   ├── SettingsScreen.kt       # Appearance switcher & system status
+│   │   │       │   └── VoiceTranslateScreen.kt # Voice Translation container (Chat vs Card mode)
 │   │   │       └── theme/
 │   │   │           ├── Color.kt                # High-contrast color definitions
 │   │   │           ├── Theme.kt                # Theme provider (System Default, Light, Dark)
@@ -115,44 +132,11 @@ PalashSaathi/
 │   │       └── values/
 │   │           ├── colors.xml                  # XML color references
 │   │           └── strings.xml                 # App metadata strings
+│   └── build.gradle.kts                        # Module build configuration
 ├── build.gradle.kts                            # Top-level Gradle configuration
 ├── settings.gradle.kts                         # Module declarations
-├── ROADMAP.md                                  # Product roadmap and milestone tracking
+├── LICENSE                                     # Proprietary SIH 2026 license & IP terms
 └── README.md                                   # Project documentation
-```
-
----
-
-## Getting Started & Build Instructions
-
-### Prerequisites
-- Android Studio Hedgehog (2023.1.1) or newer
-- JDK 17
-- Android SDK Platform 34
-- Android Device or Emulator running Android 9.0 (API 28) or higher
-
-### Building the Debug APK
-```bash
-# Clone the repository
-git clone https://github.com/akasajal/PalashSaathi.git
-cd PalashSaathi
-
-# Build debug APK using Gradle
-./gradlew assembleDebug
-```
-The compiled APK will be located at:
-`app/build/outputs/apk/debug/app-debug.apk`
-
-### Installing via ADB to Connected Device
-```bash
-# Verify connected device
-adb devices
-
-# Install APK with replacement flags
-adb install -r -d app/build/outputs/apk/debug/app-debug.apk
-
-# Launch MainActivity directly
-adb shell am start -n com.palashsaathi.app/.MainActivity
 ```
 
 ---
@@ -161,10 +145,12 @@ adb shell am start -n com.palashsaathi.app/.MainActivity
 
 | Parameter | Specification |
 | :--- | :--- |
+| **Competition** | Smart India Hackathon (SIH) 2026 |
 | **Primary Language** | Santali (ᱥᱟᱱᱛᱟᱲᱤ / संथाली) |
 | **Primary Script** | Ol Chiki (`ᱚᱞ ᱪᱤᱠᱤ`, Unicode U+1C50 - U+1C7F) |
 | **Transliteration** | Devanagari (`देवनागरी`) and Latin Phonetics |
 | **Auxiliary Subtitles** | Ho and Mundari |
+| **Communication Flow** | One-Way Classroom Broadcast (Teacher Hindi/English → Student Tribal Santali) |
 | **Corpus Volume** | 20,000 Parallel Sentences (`santali_corpus.csv`) |
 | **Target Latency** | <= 300 ms on-device round trip |
 | **Target Hardware** | Android 9.0+, ARMv7/ARMv8, <= 2 GB RAM |
@@ -174,6 +160,11 @@ adb shell am start -n com.palashsaathi.app/.MainActivity
 
 ---
 
-## License
+## License & Intellectual Property
 
-This project is licensed under the Apache 2.0 License.
+**Proprietary and Confidential - Smart India Hackathon (SIH) 2026**  
+Copyright © 2026 PalashSaathi Project Contributors. All Rights Reserved.
+
+This software, its source code, linguistic datasets, custom transliteration engines, and user interfaces are proprietary assets created exclusively for evaluation, assessment, and demonstration in the Smart India Hackathon (SIH) 2026.
+
+Unauthorized copying, reproduction, cloning, reverse engineering, redistribution, modification, or commercial exploitation of this project, in whole or in part, via any medium is strictly prohibited. For complete legal terms and conditions, please consult the [LICENSE](LICENSE) file.
