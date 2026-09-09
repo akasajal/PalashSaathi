@@ -1,9 +1,9 @@
 # PalashSaathi: Product Development Roadmap (ROADMAP.md)
 
 **Project:** AI-Powered Vernacular Pedagogy and Real-Time Translation Tool  
-**Primary Language (Full Voice & Pedagogy):** **Ho** (Warang Citi script and Devanagari transliteration)  
-**Auxiliary Languages (Live Subtitles Only):** **Santhali** and **Mundari** (Text subtitles for classroom cross-comprehension)  
-**Core Mission:** Empower non-native primary school teachers to deliver Mother-Tongue-Based Multilingual Education (MTB-MLE) and Foundational Literacy and Numeracy (FLN) instruction primarily in **Ho**, featuring real-time speech translation (< 3s latency), auto-generated bilingual worksheets, and supplementary subtitle streams for Santhali and Mundari on low-end Android tablets offline.
+**Primary Language (Full Voice & Pedagogy):** **Santali** (Ol Chiki script and Devanagari transliteration; 20K training corpus)  
+**Auxiliary Languages (Live Subtitles Only):** **Ho** and **Mundari** (Text subtitles for classroom cross-comprehension)  
+**Core Mission:** Empower non-native primary school teachers to deliver Mother-Tongue-Based Multilingual Education (MTB-MLE) and Foundational Literacy and Numeracy (FLN) instruction primarily in **Santali**, featuring real-time speech translation (< 3s latency), 20,000-sentence offline parallel corpus explorer, auto-generated bilingual worksheets, and supplementary subtitle streams for Ho and Mundari on low-end Android tablets offline.
 
 ---
 
@@ -11,11 +11,12 @@
 
 | Metric / Deliverable | Target Specification | Scope Focus | Target Milestone |
 | :--- | :--- | :--- | :--- |
-| **Primary Speech Pipeline** | Hindi -> Ho (Full Speech-to-Speech: ASR -> MT -> TTS) | Full Voice & Audio | Milestone 1, 2, 5 |
-| **Auxiliary Subtitle Tracks** | Real-time text subtitles in Santhali & Mundari | Subtitles Only (Text) | Milestone 1, 2, 4 |
-| **Voice-to-Voice Latency** | <= 3.0 seconds total round-trip for Hindi -> Ho audio | Primary Audio Stream | Milestone 2, 5 |
-| **Classroom Pedagogy** | Auto-generated Hindi <-> Ho bilingual worksheets & flashcards (FLN Grade 1-3) | Primary Pedagogy | Milestone 3 |
-| **Script Support** | Warang Citi Unicode rendering + Devanagari phonetic transliteration | Ho Orthography | Milestone 1, 3, 4 |
+| **Primary Speech Pipeline** | Hindi -> Santali (Full Speech-to-Speech: ASR -> MT -> TTS) | Full Voice & Audio | Milestone 1, 2, 5 |
+| **Auxiliary Subtitle Tracks** | Real-time text subtitles in Ho & Mundari | Subtitles Only (Text) | Milestone 1, 2, 4 |
+| **Voice-to-Voice Latency** | <= 3.0 seconds total round-trip for Hindi -> Santali audio | Primary Audio Stream | Milestone 2, 5 |
+| **Classroom Pedagogy** | Auto-generated Hindi <-> Santali bilingual worksheets & flashcards (FLN Grade 1-3) | Primary Pedagogy | Milestone 3 |
+| **Script Support** | Ol Chiki Unicode rendering + Devanagari phonetic transliteration | Santali Orthography | Milestone 1, 3, 4 |
+| **Corpus Integration** | 20,000-sentence Santali-English offline parallel corpus search & dictionary | Offline Dataset | Milestone 1, 3, 4 |
 | **Hardware Target** | Low-end Android tablet (<= 2 GB RAM, ARMv7/v8, zero internet) | Edge Runtime | Milestone 4, 5 |
 | **Offline Reliability** | 100% offline functionality for inference, font rendering, and exports | Air-Gapped Operation | Milestone 4, 5 |
 | **Submission Assets** | Runnable APK / PWA bundle, Technical Docs, Teacher Guide, Demo Video | Delivery Package | Milestone 6 |
