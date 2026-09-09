@@ -18,13 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palashsaathi.app.data.FLNDictionary
 import com.palashsaathi.app.data.model.ScriptType
 import com.palashsaathi.app.data.model.TranslationResult
-import com.palashsaathi.app.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -54,7 +52,7 @@ fun VoiceTranslateScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(LightSurface)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -62,7 +60,7 @@ fun VoiceTranslateScreen(
         // Mode & Latency Banner
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = ForestGreenBackground),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
             shape = RoundedCornerShape(12.dp)
         ) {
             Row(
@@ -76,14 +74,14 @@ fun VoiceTranslateScreen(
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "Offline",
-                        tint = ForestGreen,
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "100% Offline Edge Mode",
                         style = MaterialTheme.typography.labelLarge,
-                        color = ForestGreen,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -91,14 +89,14 @@ fun VoiceTranslateScreen(
                     Icon(
                         imageVector = Icons.Default.Bolt,
                         contentDescription = "Latency",
-                        tint = PalashOrangeDark,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "Latency: ${currentResult.latencyMs} ms (< 3.0s)",
                         style = MaterialTheme.typography.labelLarge,
-                        color = PalashOrangeDark,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -110,8 +108,11 @@ fun VoiceTranslateScreen(
         // Teacher Speech Input Card (Hindi)
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = CardBackground),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = CardDefaults.outlinedCardBorder().copy(
+                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline)
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -123,11 +124,11 @@ fun VoiceTranslateScreen(
                     Text(
                         text = "शिक्षक की आवाज़ (Hindi Input)",
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     if (isListening) {
-                        Badge(containerColor = PalashOrange) {
-                            Text("सुन रहे हैं... (Listening)", color = Color.White)
+                        Badge(containerColor = MaterialTheme.colorScheme.primary) {
+                            Text("सुन रहे हैं... (Listening)", color = MaterialTheme.colorScheme.onPrimary)
                         }
                     }
                 }
@@ -135,7 +136,7 @@ fun VoiceTranslateScreen(
                 Text(
                     text = recognizedHindi,
                     style = MaterialTheme.typography.headlineMedium.copy(fontSize = 24.sp),
-                    color = DarkCharcoal,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -171,13 +172,13 @@ fun VoiceTranslateScreen(
                 modifier = Modifier.size(90.dp),
                 shape = CircleShape,
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = if (isListening) PalashOrangeDark else PalashOrange
+                    containerColor = if (isListening) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
                     imageVector = if (isListening) Icons.Default.GraphicEq else Icons.Default.Mic,
                     contentDescription = "Push to Talk",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(42.dp)
                 )
             }
@@ -186,18 +187,20 @@ fun VoiceTranslateScreen(
         Text(
             text = if (isListening) "आवाज़ रिकॉर्ड हो रही है..." else if (isTranslating) "अनुवाद हो रहा है..." else "बोलने के लिए माइक दबाएँ (Push to Talk)",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.DarkGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 4.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Primary Ho Translation Output Card
+        // Primary Ho Translation Output Card (Coral Saffron Container)
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0)),
-            border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(PalashOrangeLight)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            border = CardDefaults.outlinedCardBorder().copy(
+                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+            ),
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -209,7 +212,7 @@ fun VoiceTranslateScreen(
                     Text(
                         text = "हो भाषा में ध्वनि (Primary Voice: Ho)",
                         style = MaterialTheme.typography.labelLarge,
-                        color = PalashOrangeDark,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(
@@ -220,7 +223,7 @@ fun VoiceTranslateScreen(
                         Icon(
                             imageVector = Icons.Default.VolumeUp,
                             contentDescription = "Speak Ho",
-                            tint = PalashOrangeDark,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.size(28.dp)
                         )
                     }
@@ -230,7 +233,7 @@ fun VoiceTranslateScreen(
                 Text(
                     text = if (currentScript == ScriptType.WARANG_CITI) currentResult.targetHoWarangCiti else currentResult.targetHoDevanagari,
                     style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
-                    color = DarkCharcoal,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.ExtraBold
                 )
 
@@ -240,19 +243,19 @@ fun VoiceTranslateScreen(
                 Text(
                     text = "उच्चारण (Pronunciation): ${currentResult.targetHoPhonetic}  •  ${if (currentScript == ScriptType.WARANG_CITI) currentResult.targetHoDevanagari else currentResult.targetHoWarangCiti}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.DarkGray
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f)
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Auxiliary Subtitle HUD (Santhali and Mundari)
+        // Auxiliary Subtitle HUD (Santhali and Mundari) with Yellowish Highlights
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, Color(0xFF37474F), RoundedCornerShape(14.dp)),
-            colors = CardDefaults.cardColors(containerColor = SubtitleBannerColor),
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(14.dp)
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
@@ -263,32 +266,35 @@ fun VoiceTranslateScreen(
                     Icon(
                         imageVector = Icons.Default.Subtitles,
                         contentDescription = "Subtitles",
-                        tint = SubtitleHighlight,
+                        tint = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "लाइव उपशीर्षक (Live Subtitle HUD)",
                         style = MaterialTheme.typography.labelLarge,
-                        color = SubtitleHighlight,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
-                HorizontalDivider(color = Color(0xFF455A64), modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
 
                 // Santhali Subtitle Strip
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "संथाली (Santhali): ",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = currentResult.subtitleSanthali,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = SubtitleTextColor,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -300,13 +306,13 @@ fun VoiceTranslateScreen(
                     Text(
                         text = "मुण्डारी (Mundari): ",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = currentResult.subtitleMundari,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = SubtitleTextColor,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -319,7 +325,7 @@ fun VoiceTranslateScreen(
         Text(
             text = "त्वरित कक्षा निर्देश (Quick Teacher Commands)",
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
-            color = DarkCharcoal,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Start)
         )
@@ -335,6 +341,7 @@ fun VoiceTranslateScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp),
+                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Row(
@@ -345,17 +352,21 @@ fun VoiceTranslateScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text(text = item.sourceHindi, fontWeight = FontWeight.Bold, color = DarkCharcoal)
+                        Text(
+                            text = item.sourceHindi,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                         Text(
                             text = if (currentScript == ScriptType.WARANG_CITI) item.targetHoWarangCiti else item.targetHoDevanagari,
                             fontSize = 13.sp,
-                            color = PalashOrangeDark
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = "Play",
-                        tint = PalashOrange,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(24.dp)
                     )
                 }

@@ -60,26 +60,31 @@ fun WorksheetScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(LightSurface)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Text(
             text = "द्विभाषी अभ्यास पत्र (FLN Worksheet Generator)",
             style = MaterialTheme.typography.titleLarge,
-            color = DarkCharcoal,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = "Generate printable Hindi <-> Ho worksheets with Warang Citi and Devanagari offline.",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.DarkGray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(14.dp))
 
         // Grade Selector
-        Text(text = "कक्षा (Grade Level):", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+        Text(
+            text = "कक्षा (Grade Level):",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,8 +97,8 @@ fun WorksheetScreen(
                     onClick = { selectedGrade = grade },
                     label = { Text(grade.label) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = PalashOrange,
-                        selectedLabelColor = Color.White
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
                     )
                 )
             }
@@ -102,7 +107,12 @@ fun WorksheetScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Category Selector
-        Text(text = "विषय (FLN Category):", fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+        Text(
+            text = "विषय (FLN Category):",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -115,8 +125,8 @@ fun WorksheetScreen(
                     onClick = { selectedCategory = cat },
                     label = { Text(if (cat == FLNCategory.NUMERACY) "संख्या (Numeracy)" else "भाषा (Literacy)") },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = ForestGreen,
-                        selectedLabelColor = Color.White
+                        selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onSecondary
                     )
                 )
             }
@@ -128,8 +138,8 @@ fun WorksheetScreen(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, BorderOutline, RoundedCornerShape(12.dp)),
-            colors = CardDefaults.cardColors(containerColor = CardBackground),
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
@@ -141,11 +151,11 @@ fun WorksheetScreen(
                     Text(
                         text = "वर्कशीट पूर्वावलोकन (Preview)",
                         style = MaterialTheme.typography.labelLarge,
-                        color = PalashOrangeDark,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
-                    Badge(containerColor = ForestGreenBackground) {
-                        Text("A4 Print Ready", color = ForestGreen)
+                    Badge(containerColor = MaterialTheme.colorScheme.secondaryContainer) {
+                        Text("A4 Print Ready", color = MaterialTheme.colorScheme.onSecondaryContainer)
                     }
                 }
 
@@ -154,16 +164,19 @@ fun WorksheetScreen(
                     text = currentWorksheet.titleHindi,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = DarkCharcoal
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = if (currentScript == ScriptType.WARANG_CITI) currentWorksheet.titleHoWarangCiti else currentWorksheet.titleHoDevanagari,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = PalashOrangeDark,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
                 )
 
-                HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = BorderOutline)
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                )
 
                 currentWorksheet.exercises.forEachIndexed { i, ex ->
                     Row(
@@ -172,21 +185,29 @@ fun WorksheetScreen(
                             .padding(vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "${i + 1}. ", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "${i + 1}. ",
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                         Icon(
                             imageVector = ex.icon,
                             contentDescription = null,
-                            tint = ForestGreen,
+                            tint = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
                                 .size(22.dp)
                                 .padding(end = 6.dp)
                         )
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(text = ex.questionHindi, fontWeight = FontWeight.Medium)
+                            Text(
+                                text = ex.questionHindi,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                             Text(
                                 text = "हो: ${if (currentScript == ScriptType.WARANG_CITI) ex.questionHoWarangCiti else ex.questionHoDevanagari}",
                                 fontSize = 12.sp,
-                                color = Color.Gray
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -214,18 +235,22 @@ fun WorksheetScreen(
                 .fillMaxWidth()
                 .height(52.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = ForestGreen)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
         ) {
             Icon(
                 imageVector = Icons.Default.PictureAsPdf,
                 contentDescription = "Export PDF",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onSecondary
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = if (isGenerating) "PDF तैयार हो रहा है..." else "प्रिंट-रेडी PDF डाउनलोड करें (Export PDF)",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
 
@@ -233,19 +258,23 @@ fun WorksheetScreen(
             Spacer(modifier = Modifier.height(10.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Row(
                     modifier = Modifier.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = null, tint = ForestGreen)
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "सहेजा गया: $generatedPdfPath",
                         fontSize = 12.sp,
-                        color = ForestGreen
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }

@@ -18,16 +18,19 @@ import com.palashsaathi.app.ui.theme.*
 import kotlinx.coroutines.launch
 
 enum class AppTab(val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
-    VOICE("बोलें (Voice)", Icons.Default.Mic),
-    WORKSHEET("अभ्यास पत्र (Sheets)", Icons.Default.Description),
-    FLASHCARDS("फ्लैशकार्ड (Cards)", Icons.Default.Style),
-    PHRASEBOOK("शब्दावली (Phrases)", Icons.Default.MenuBook)
+    VOICE("बोलें", Icons.Default.Mic),
+    WORKSHEET("अभ्यास", Icons.Default.Description),
+    FLASHCARDS("कार्ड", Icons.Default.Style),
+    PHRASEBOOK("शब्दावली", Icons.Default.MenuBook),
+    SETTINGS("सेटिंग्स", Icons.Default.Settings)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     audioEngine: AudioSynthesisEngine,
+    currentThemeMode: AppThemeMode,
+    onThemeModeChanged: (AppThemeMode) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(AppTab.VOICE) }
@@ -50,16 +53,16 @@ fun MainScreen(
                                 text = "PalashSaathi",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 19.sp,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Surface(
-                                color = ForestGreenLight,
+                                color = MaterialTheme.colorScheme.secondary,
                                 shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
                             ) {
                                 Text(
                                     text = "Offline",
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.onSecondary,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
@@ -69,12 +72,12 @@ fun MainScreen(
                         Text(
                             text = "AI Vernacular Pedagogy • Ho (हो)",
                             fontSize = 12.sp,
-                            color = Color(0xFFFFE0B2)
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f)
                         )
                     }
                 },
                 actions = {
-                    // Script Switcher Button
+                    // Script Switcher Button (Warang Citi <-> Devanagari)
                     OutlinedButton(
                         onClick = {
                             currentScript = if (currentScript == ScriptType.WARANG_CITI) {
@@ -83,8 +86,12 @@ fun MainScreen(
                                 ScriptType.WARANG_CITI
                             }
                         },
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                        border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(Color.White)),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        border = ButtonDefaults.outlinedButtonBorder.copy(
+                            brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.onPrimary)
+                        ),
                         shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
                         modifier = Modifier.padding(end = 8.dp)
                     ) {
@@ -92,34 +99,47 @@ fun MainScreen(
                             imageVector = Icons.Default.Translate,
                             contentDescription = "Switch Script",
                             modifier = Modifier.size(16.dp),
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = if (currentScript == ScriptType.WARANG_CITI) "𑣓𑣉𑣎𑣉𑣜" else "देवनागरी",
                             fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = PalashOrange)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
             )
         },
         bottomBar = {
             NavigationBar(
-                containerColor = CardBackground,
-                tonalElevation = 8.dp
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 6.dp
             ) {
                 AppTab.values().forEach { tab ->
                     NavigationBarItem(
                         selected = selectedTab == tab,
                         onClick = { selectedTab = tab },
                         icon = { Icon(imageVector = tab.icon, contentDescription = tab.label) },
-                        label = { Text(text = tab.label, fontSize = 11.sp, fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal) },
+                        label = {
+                            Text(
+                                text = tab.label,
+                                fontSize = 11.sp,
+                                fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal
+                            )
+                        },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = PalashOrangeDark,
-                            selectedTextColor = PalashOrangeDark,
-                            indicatorColor = Color(0xFFFFE0B2)
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer
                         )
                     )
                 }
@@ -146,6 +166,10 @@ fun MainScreen(
                 AppTab.PHRASEBOOK -> PhrasebookScreen(
                     currentScript = currentScript,
                     onSpeakHoAudio = onSpeakHoAudio
+                )
+                AppTab.SETTINGS -> SettingsScreen(
+                    currentThemeMode = currentThemeMode,
+                    onThemeModeChanged = onThemeModeChanged
                 )
             }
         }

@@ -43,19 +43,19 @@ fun PhrasebookScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(LightSurface)
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         Text(
             text = "कक्षा निर्देश शब्दावली (Classroom Phrasebook)",
             style = MaterialTheme.typography.titleLarge,
-            color = DarkCharcoal,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = "Essential phrases for non-native teachers to guide students in Ho.",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.DarkGray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -79,8 +79,8 @@ fun PhrasebookScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .border(1.dp, BorderOutline, RoundedCornerShape(12.dp)),
-                    colors = CardDefaults.cardColors(containerColor = CardBackground),
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp)),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
@@ -94,19 +94,19 @@ fun PhrasebookScreen(
                                     text = phrase.sourceHindi,
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
-                                    color = DarkCharcoal
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = if (currentScript == ScriptType.WARANG_CITI) phrase.targetHoWarangCiti else phrase.targetHoDevanagari,
                                     style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
-                                    color = PalashOrangeDark,
+                                    color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.ExtraBold
                                 )
                                 Text(
                                     text = "उच्चारण: ${phrase.targetHoPhonetic}",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                             IconButton(
@@ -117,19 +117,22 @@ fun PhrasebookScreen(
                                 Icon(
                                     imageVector = Icons.Default.VolumeUp,
                                     contentDescription = "Speak",
-                                    tint = PalashOrange,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(28.dp)
                                 )
                             }
                         }
 
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = BorderOutline)
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        )
 
                         Row(modifier = Modifier.fillMaxWidth()) {
                             Text(
                                 text = "संथाली: ${phrase.subtitleSanthali}  •  मुण्डारी: ${phrase.subtitleMundari}",
                                 fontSize = 11.sp,
-                                color = Color.DarkGray
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }

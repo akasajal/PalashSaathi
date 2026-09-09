@@ -44,19 +44,19 @@ fun FlashcardsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(LightSurface)
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         Text(
             text = "चित्र व शब्द फ्लैशकार्ड (Visual Flashcards)",
             style = MaterialTheme.typography.titleLarge,
-            color = DarkCharcoal,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = "Tap the speaker icon to hear authentic Ho pronunciation offline.",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.DarkGray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -69,17 +69,29 @@ fun FlashcardsScreen(
             FilterChip(
                 selected = selectedFilter == null,
                 onClick = { selectedFilter = null },
-                label = { Text("सभी (All)") }
+                label = { Text("सभी (All)") },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
             FilterChip(
                 selected = selectedFilter == FLNCategory.NUMERACY,
                 onClick = { selectedFilter = FLNCategory.NUMERACY },
-                label = { Text("संख्या (Numeracy)") }
+                label = { Text("संख्या (Numeracy)") },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
             FilterChip(
                 selected = selectedFilter == FLNCategory.LITERACY,
                 onClick = { selectedFilter = FLNCategory.LITERACY },
-                label = { Text("भाषा (Literacy)") }
+                label = { Text("भाषा (Literacy)") },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         }
 
@@ -111,8 +123,8 @@ fun FlashcardCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, BorderOutline, RoundedCornerShape(14.dp)),
-        colors = CardDefaults.cardColors(containerColor = CardBackground),
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(14.dp)
     ) {
@@ -126,7 +138,7 @@ fun FlashcardCard(
             Icon(
                 imageVector = item.icon,
                 contentDescription = item.hindiWord,
-                tint = PalashOrange,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .size(48.dp)
                     .padding(vertical = 4.dp)
@@ -137,7 +149,7 @@ fun FlashcardCard(
                 text = item.hindiWord,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = DarkCharcoal,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
 
@@ -148,14 +160,14 @@ fun FlashcardCard(
                 text = if (currentScript == ScriptType.WARANG_CITI) item.hoWarangCiti else item.hoDevanagari,
                 style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
                 fontWeight = FontWeight.ExtraBold,
-                color = PalashOrangeDark,
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 text = "उच्चारण: ${item.hoPhonetic}",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
 
@@ -163,7 +175,7 @@ fun FlashcardCard(
 
             // Subtitle chips for Santhali & Mundari
             Surface(
-                color = Color(0xFFECEFF1),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(6.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -171,12 +183,12 @@ fun FlashcardCard(
                     Text(
                         text = "संथाली: ${item.santhaliSubtitle}",
                         fontSize = 11.sp,
-                        color = Color.DarkGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = "मुण्डारी: ${item.mundariSubtitle}",
                         fontSize = 11.sp,
-                        color = Color.DarkGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -188,12 +200,14 @@ fun FlashcardCard(
                 onClick = onSpeak,
                 modifier = Modifier.size(36.dp),
                 shape = CircleShape,
-                colors = IconButtonDefaults.filledIconButtonColors(containerColor = ForestGreenBackground)
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
             ) {
                 Icon(
                     imageVector = Icons.Default.VolumeUp,
                     contentDescription = "Pronounce Ho",
-                    tint = ForestGreen,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.size(20.dp)
                 )
             }
