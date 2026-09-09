@@ -146,17 +146,48 @@ object SantaliCorpusRepository {
 
     /**
      * Finds the closest match for live speech or text translation.
+     * Prevents short 1-2 word queries from matching random long sentences.
      */
     fun findBestMatch(query: String): CorpusSentence? {
         val q = query.trim().lowercase()
         if (q.isBlank()) return null
 
-        // Exact match first
-        val exact = _sentences.firstOrNull { it.english.lowercase() == q }
+        // 1. Exact match first
+        val exact = _sentences.firstOrNull { 
+            it.english.trim().equals(q, ignoreCase = true) ||
+            it.santaliPhonetic.trim().equals(q, ignoreCase = true) ||
+            it.santaliDevanagari.trim().equals(query.trim(), ignoreCase = true) ||
+            it.santaliOlChiki.trim().equals(query.trim(), ignoreCase = true)
+        }
         if (exact != null) return exact
 
-        // Prefix or substring match
-        return _sentences.firstOrNull { it.english.lowercase().contains(q) || it.santaliOlChiki.contains(query) }
+        // 2. High-confidence sentence similarity match (ONLY for queries with at least 3 words)
+        val queryTokens = q.split(Regex("\\s+")).filter { it.length > 1 }
+        if (queryTokens.size >= 3) {
+            var bestScore = 0.0
+            var bestSentence: CorpusSentence? = null
+
+            for (sentence in _sentences) {
+                val sentenceTokens = sentence.english.lowercase().split(Regex("\\s+")).filter { it.length > 1 }
+                if (sentenceTokens.isEmpty()) continue
+
+                val matchCount = queryTokens.count { qt -> sentenceTokens.any { st -> st == qt } }
+                val overlap = matchCount.toDouble() / queryTokens.size.toDouble()
+
+                // Only consider if at least 70% of query words match and length is within 2x
+                val lengthRatio = sentence.english.length.toDouble() / query.length.toDouble()
+                if (overlap >= 0.70 && lengthRatio in 0.5..2.0) {
+                    if (overlap > bestScore) {
+                        bestScore = overlap
+                        bestSentence = sentence
+                        if (overlap >= 0.95) break
+                    }
+                }
+            }
+            if (bestSentence != null) return bestSentence
+        }
+
+        return null
     }
 
     /**

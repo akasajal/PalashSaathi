@@ -1,5 +1,10 @@
 package com.palashsaathi.app.ui.screens
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,13 +22,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.util.Log
+import androidx.core.content.ContextCompat
 import com.palashsaathi.app.data.FLNDictionary
 import com.palashsaathi.app.data.model.LanguagePairMode
 import com.palashsaathi.app.data.model.ScriptType
 import com.palashsaathi.app.data.model.TranslationResult
+import com.palashsaathi.app.engine.AcousticKeywordSpotter
+import com.palashsaathi.app.engine.AudioRecordEngine
+import com.palashsaathi.app.engine.DynamicTranslationEngine
+import com.palashsaathi.app.engine.VoiceRecognitionEngine
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -34,9 +46,16 @@ fun VoiceTranslateScreen(
     onSpeakSantaliAudio: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val voiceRecognitionEngine = remember { VoiceRecognitionEngine(context) }
+    val audioRecordEngine = remember { AudioRecordEngine() }
+
     var isListening by remember { mutableStateOf(false) }
+    var liveAmplitude by remember { mutableStateOf(0f) }
     var isTranslating by remember { mutableStateOf(false) }
+    var isEditingText by remember { mutableStateOf(false) }
+    var customInputText by remember { mutableStateOf("") }
     var recognizedSourceText by remember(languageMode) {
         mutableStateOf(
             if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
@@ -48,37 +67,104 @@ fun VoiceTranslateScreen(
     var currentResult by remember(languageMode) { mutableStateOf(FLNDictionary.CLASSROOM_ENTRIES[0]) }
     var showDialects by remember { mutableStateOf(false) }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = if (isListening) 1.25f else 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(600, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "scale"
-    )
-
-    val translationPool = remember(languageMode) {
-        val list = mutableListOf<TranslationResult>()
-        list.addAll(FLNDictionary.CLASSROOM_ENTRIES)
-        list.addAll(
-            FLNDictionary.CORPUS_FEATURED_SENTENCES.map { s ->
-                TranslationResult(
-                    sourceHindi = s.english,
-                    sourceEnglish = s.english,
-                    targetSantaliOlChiki = s.santaliOlChiki,
-                    targetSantaliDevanagari = s.santaliDevanagari,
-                    targetSantaliPhonetic = s.santaliPhonetic,
-                    subtitleHo = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Ho: ${s.santaliPhonetic}" else "हो: ${s.santaliPhonetic}",
-                    subtitleMundari = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Mundari: ${s.santaliPhonetic}" else "मुण्डारी: ${s.santaliPhonetic}",
-                    latencyMs = 210L,
-                    fromCorpus = true
-                )
-            }
-        )
-        list
+    DisposableEffect(Unit) {
+        onDispose {
+            voiceRecognitionEngine.destroy()
+            audioRecordEngine.stopRecording(cancel = true)
+        }
     }
+
+    // In-App Speech Recognition Controller (Zero Google modal popups, true verbal word decoding)
+    fun startInAppSpeechRecognition() {
+        if (isListening) {
+            voiceRecognitionEngine.stopListening()
+            audioRecordEngine.stopRecording(cancel = false)
+            isListening = false
+            liveAmplitude = 0f
+            return
+        }
+
+        isListening = true
+        liveAmplitude = 0f
+
+        if (voiceRecognitionEngine.isRecognitionAvailable) {
+            voiceRecognitionEngine.startListening(
+                languageMode = languageMode,
+                onAmplitude = { amp ->
+                    liveAmplitude = amp
+                },
+                onPartial = { interimText ->
+                    recognizedSourceText = interimText
+                },
+                onResult = { spokenText ->
+                    isListening = false
+                    liveAmplitude = 0f
+                    recognizedSourceText = spokenText
+                    isTranslating = true
+
+                    coroutineScope.launch {
+                        val translation = DynamicTranslationEngine.translate(spokenText, languageMode)
+                        currentResult = translation
+                        isTranslating = false
+                        onSpeakSantaliAudio(translation.targetSantaliPhonetic, translation.targetSantaliDevanagari)
+                    }
+                },
+                onError = { errorMsg ->
+                    isListening = false
+                    liveAmplitude = 0f
+                    Log.w("VoiceTranslateScreen", "Speech recognition error: $errorMsg")
+                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+                }
+            )
+        } else {
+            // High-precision acoustic feature extraction fallback using raw PCM AudioRecord & AcousticKeywordSpotter
+            audioRecordEngine.startRecording(
+                onAmplitude = { amp ->
+                    liveAmplitude = amp
+                },
+                onSpeechFinished = { pcmBytes, durationMs ->
+                    isListening = false
+                    liveAmplitude = 0f
+                    isTranslating = true
+
+                    coroutineScope.launch {
+                        val candidate = if (customInputText.isNotBlank() && isEditingText) {
+                            customInputText.trim()
+                        } else {
+                            AcousticKeywordSpotter.classifyPcmAudio(pcmBytes, durationMs, languageMode)
+                        }
+
+                        recognizedSourceText = candidate
+                        val translation = DynamicTranslationEngine.translate(candidate, languageMode)
+                        currentResult = translation
+                        isTranslating = false
+                        onSpeakSantaliAudio(translation.targetSantaliPhonetic, translation.targetSantaliDevanagari)
+                    }
+                }
+            )
+        }
+    }
+
+    // Runtime Permission Launcher for RECORD_AUDIO
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startInAppSpeechRecognition()
+        } else {
+            Toast.makeText(
+                context,
+                if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                    "Microphone permission is required to record voice"
+                else
+                    "आवाज़ रिकॉर्ड करने के लिए माइक्रोफ़ोन की अनुमति चाहिए",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    // Live acoustic wave scale computed directly from real-time microphone decibels
+    val liveMicScale = 1f + (liveAmplitude * 0.45f)
 
     Column(
         modifier = modifier
@@ -88,7 +174,7 @@ fun VoiceTranslateScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Teacher Speech Bubble (Conversational Card with Avatar)
+        // 1. Teacher Speech Bubble (Conversational Card with Avatar & Live Edit/Type field)
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -122,23 +208,103 @@ fun VoiceTranslateScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    if (isListening) {
-                        Badge(containerColor = MaterialTheme.colorScheme.primary) {
-                            Text(
-                                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Listening..." else "सुन रहे हैं...",
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (isListening) {
+                            Badge(containerColor = MaterialTheme.colorScheme.primary) {
+                                Text(
+                                    text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Listening..." else "सुन रहे हैं...",
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(6.dp))
+                        }
+
+                        // Edit / Keyboard toggle button
+                        IconButton(
+                            onClick = {
+                                isEditingText = !isEditingText
+                                if (isEditingText && customInputText.isEmpty()) {
+                                    customInputText = recognizedSourceText
+                                }
+                            },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isEditingText) Icons.Default.Close else Icons.Default.Edit,
+                                contentDescription = "Type or edit phrase",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                     }
                 }
+
                 Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = recognizedSourceText,
-                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 22.sp),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold
-                )
+
+                if (isEditingText) {
+                    // Editable text input mode
+                    OutlinedTextField(
+                        value = customInputText,
+                        onValueChange = { customInputText = it },
+                        placeholder = {
+                            Text(
+                                if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                                    "Type phrase (e.g. open book / drink water)..."
+                                else
+                                    "वाक्य टाइप करें (उदा. किताब खोलो / पानी पियो)...",
+                                fontSize = 14.sp
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(14.dp),
+                        singleLine = false,
+                        maxLines = 3
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = {
+                                val toTranslate = customInputText.trim()
+                                if (toTranslate.isNotBlank()) {
+                                    recognizedSourceText = toTranslate
+                                    isEditingText = false
+                                    isTranslating = true
+                                    coroutineScope.launch {
+                                        val res = DynamicTranslationEngine.translate(toTranslate, languageMode)
+                                        currentResult = res
+                                        isTranslating = false
+                                        onSpeakSantaliAudio(res.targetSantaliPhonetic, res.targetSantaliDevanagari)
+                                    }
+                                }
+                            },
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Translate,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Translate" else "अनुवाद करें",
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                } else {
+                    // Display recognized text
+                    Text(
+                        text = recognizedSourceText,
+                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 22.sp),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
 
@@ -149,22 +315,17 @@ fun VoiceTranslateScreen(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(116.dp)
-                .scale(pulseScale)
+                .scale(if (isListening) liveMicScale else 1f)
         ) {
             FilledIconButton(
                 onClick = {
-                    if (!isListening) {
-                        isListening = true
-                        coroutineScope.launch {
-                            delay(1200) // simulate teacher speech
-                            isListening = false
-                            isTranslating = true
-                            delay(250) // fast inference
-                            val nextEntry = translationPool.random()
-                            recognizedSourceText = nextEntry.getSource(languageMode)
-                            currentResult = nextEntry
-                            isTranslating = false
-                            onSpeakSantaliAudio(currentResult.targetSantaliPhonetic, currentResult.targetSantaliDevanagari)
+                    if (isListening) {
+                        startInAppSpeechRecognition()
+                    } else {
+                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                            startInAppSpeechRecognition()
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                         }
                     }
                 },
@@ -265,35 +426,66 @@ fun VoiceTranslateScreen(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Friendly pronunciation pill
+                // Friendly pronunciation and dual-script block (clean column layout, zero vertical letter squeeze)
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
-                    modifier = Modifier.padding(vertical = 2.dp)
+                    shape = RoundedCornerShape(14.dp),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Hearing,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = currentResult.targetSantaliPhonetic,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "•  ${if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliDevanagari else currentResult.targetSantaliOlChiki}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Hearing,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = currentResult.targetSantaliPhonetic,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        val altScript = if (currentScript == ScriptType.OL_CHIKI) {
+                            currentResult.targetSantaliDevanagari
+                        } else {
+                            currentResult.targetSantaliOlChiki
+                        }
+
+                        if (altScript.isNotBlank() && altScript != currentResult.targetSantaliPhonetic) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                                thickness = 0.8.dp
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = if (currentScript == ScriptType.OL_CHIKI) "देवनागरी लिपि:" else "ᱚᱞ ᱪᱤᱠᱤ:",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = altScript,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
                 }
             }
