@@ -1,17 +1,26 @@
 package com.palashsaathi.app.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.palashsaathi.app.R
 import com.palashsaathi.app.data.model.ScriptType
 import com.palashsaathi.app.engine.AudioSynthesisEngine
 import com.palashsaathi.app.ui.theme.*
@@ -35,6 +44,7 @@ fun MainScreen(
 ) {
     var selectedTab by remember { mutableStateOf(AppTab.VOICE) }
     var currentScript by remember { mutableStateOf(ScriptType.OL_CHIKI) }
+    var showLandingSynopsis by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
     val onSpeakSantaliAudio: (String, String) -> Unit = { phonetic, devanagari ->
@@ -43,39 +53,56 @@ fun MainScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Column {
+    Box(modifier = modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "PalashSaathi",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 19.sp,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
                             Surface(
-                                color = MaterialTheme.colorScheme.secondary,
-                                shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color.Transparent,
+                                modifier = Modifier.size(34.dp)
                             ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.app_logo),
+                                    contentDescription = "Logo",
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(8.dp))
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = "PalashSaathi",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 18.sp,
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        shape = RoundedCornerShape(4.dp)
+                                    ) {
+                                        Text(
+                                            text = "Offline",
+                                            color = MaterialTheme.colorScheme.onSecondary,
+                                            fontSize = 10.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                        )
+                                    }
+                                }
                                 Text(
-                                    text = "Offline",
-                                    color = MaterialTheme.colorScheme.onSecondary,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                    text = "Santali (ᱥᱟᱱᱛᱟᱲᱤ) • 20K Corpus",
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
                                 )
                             }
                         }
-                        Text(
-                            text = "AI Vernacular Pedagogy • Santali (ᱥᱟᱱᱛᱟᱲᱤ) • 20K Corpus",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f)
-                        )
-                    }
-                },
+                    },
                 actions = {
                     // Script Switcher Button (Ol Chiki <-> Devanagari)
                     OutlinedButton(
@@ -172,6 +199,17 @@ fun MainScreen(
                     onThemeModeChanged = onThemeModeChanged
                 )
             }
+        }
+    }
+
+        AnimatedVisibility(
+            visible = showLandingSynopsis,
+            enter = fadeIn(animationSpec = tween(300)),
+            exit = fadeOut(animationSpec = tween(600))
+        ) {
+            LandingSynopsisScreen(
+                onDismiss = { showLandingSynopsis = false }
+            )
         }
     }
 }

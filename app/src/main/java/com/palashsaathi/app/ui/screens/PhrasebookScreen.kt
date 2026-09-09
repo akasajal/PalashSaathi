@@ -50,7 +50,7 @@ fun PhrasebookScreen(
     }
 
     // Filtered 20K corpus sentences
-    val filteredCorpus = remember(searchQuery, isCorpusLoaded) {
+    val filteredCorpus = remember(selectedMode, searchQuery, isCorpusLoaded) {
         if (selectedMode == PhrasebookMode.CORPUS_EXPLORER) {
             SantaliCorpusRepository.search(searchQuery, limit = 40)
         } else {
