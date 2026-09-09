@@ -2,7 +2,6 @@ package com.palashsaathi.app.engine
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -39,7 +38,7 @@ class VoiceRecognitionEngine(private val context: Context) {
     private var onAmplitudeCallback: ((Float) -> Unit)? = null
     private var onPartialCallback: ((String) -> Unit)? = null
     private var onResultCallback: ((String) -> Unit)? = null
-    private var onErrorCallback: ((String) -> Unit)? = null
+    private var onErrorCallback: ((errorCode: Int, message: String) -> Unit)? = null
 
     val isRecognitionAvailable: Boolean
         get() = SpeechRecognizer.isRecognitionAvailable(context)
@@ -51,13 +50,7 @@ class VoiceRecognitionEngine(private val context: Context) {
         if (speechRecognizer != null) return speechRecognizer
 
         return try {
-            val recognizer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
-            ) {
-                SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
-            } else {
-                SpeechRecognizer.createSpeechRecognizer(context)
-            }
+            val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
 
             recognizer.setRecognitionListener(object : RecognitionListener {
                 override fun onReadyForSpeech(params: Bundle?) {
@@ -101,12 +94,24 @@ class VoiceRecognitionEngine(private val context: Context) {
                         SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Speech recognizer busy, retrying..."
                         SpeechRecognizer.ERROR_SERVER -> "Speech recognition server error."
                         SpeechRecognizer.ERROR_CLIENT -> "Speech recognition client error."
+                        11 -> "Server disconnected."
+                        12 -> "Language not supported by speech model."
+                        13 -> "Language pack unavailable offline."
+                        14 -> "Cannot check language support."
                         else -> "Speech recognition error ($error)."
                     }
                     Log.w(TAG, "SpeechRecognizer error: $error -> $message")
 
+                    // Clean up recognizer state if critical failure
+                    if (error == 13 || error == 12 || error == SpeechRecognizer.ERROR_CLIENT) {
+                        try {
+                            speechRecognizer?.destroy()
+                        } catch (_: Exception) {}
+                        speechRecognizer = null
+                    }
+
                     mainHandler.post {
-                        onErrorCallback?.invoke(message)
+                        onErrorCallback?.invoke(error, message)
                     }
                 }
 
@@ -124,7 +129,7 @@ class VoiceRecognitionEngine(private val context: Context) {
                         if (spokenText.isNotBlank()) {
                             onResultCallback?.invoke(spokenText)
                         } else {
-                            onErrorCallback?.invoke("No words recognized.")
+                            onErrorCallback?.invoke(SpeechRecognizer.ERROR_NO_MATCH, "No words recognized.")
                         }
                     }
                 }
@@ -158,7 +163,7 @@ class VoiceRecognitionEngine(private val context: Context) {
         onAmplitude: (Float) -> Unit,
         onPartial: (String) -> Unit,
         onResult: (String) -> Unit,
-        onError: (String) -> Unit
+        onError: (errorCode: Int, message: String) -> Unit
     ) {
         this.onAmplitudeCallback = onAmplitude
         this.onPartialCallback = onPartial
@@ -169,7 +174,7 @@ class VoiceRecognitionEngine(private val context: Context) {
             try {
                 val recognizer = ensureRecognizer()
                 if (recognizer == null) {
-                    onError("Speech recognition not available on this device.")
+                    onError(-1, "Speech recognition not available on this device.")
                     return@post
                 }
 
@@ -182,7 +187,6 @@ class VoiceRecognitionEngine(private val context: Context) {
                     putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
                     putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
                     putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
-                    putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
                 }
 
                 isListening = true
@@ -191,7 +195,7 @@ class VoiceRecognitionEngine(private val context: Context) {
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting SpeechRecognizer", e)
                 isListening = false
-                onError("Failed to start speech recognition: ${e.localizedMessage}")
+                onError(-1, "Failed to start speech recognition: ${e.localizedMessage}")
             }
         }
     }

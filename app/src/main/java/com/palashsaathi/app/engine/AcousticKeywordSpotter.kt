@@ -29,7 +29,12 @@ object AcousticKeywordSpotter {
         AcousticProfile("खड़े हो जाओ", 4, 1350, 1250L, false),
         AcousticProfile("ध्यान से सुनो", 4, 1900, 1400L, false),
         AcousticProfile("ब्लैकबोर्ड पर देखो", 5, 1600, 1750L, false),
-        AcousticProfile("यह पन्ना पढ़ो", 4, 1450, 1350L, true)
+        AcousticProfile("यह पन्ना पढ़ो", 4, 1450, 1350L, true),
+        AcousticProfile("शाबाश बहुत अच्छा", 6, 2000, 1600L, true),
+        AcousticProfile("अपना नाम बताओ", 5, 1300, 1300L, false),
+        AcousticProfile("कॉपी में लिखो", 5, 1700, 1350L, true),
+        AcousticProfile("नमस्ते", 3, 1800, 800L, true),
+        AcousticProfile("जोहार", 2, 1200, 750L, false)
     )
 
     private val ENGLISH_PROFILES = listOf(
@@ -42,7 +47,11 @@ object AcousticKeywordSpotter {
         AcousticProfile("Open your book", 4, 1600, 1350L, true),
         AcousticProfile("Listen carefully", 5, 2100, 1500L, true),
         AcousticProfile("Look at the blackboard", 5, 1700, 1700L, false),
-        AcousticProfile("Read this page", 3, 1750, 1100L, false)
+        AcousticProfile("Read this page", 3, 1750, 1100L, false),
+        AcousticProfile("Hello", 2, 1100, 700L, false),
+        AcousticProfile("Johar", 2, 1200, 750L, false),
+        AcousticProfile("Tell your name", 3, 1400, 1000L, false),
+        AcousticProfile("Write in notebook", 4, 1800, 1300L, true)
     )
 
     /**

@@ -66,6 +66,7 @@ fun VoiceTranslateScreen(
     }
     var currentResult by remember(languageMode) { mutableStateOf(FLNDictionary.CLASSROOM_ENTRIES[0]) }
     var showDialects by remember { mutableStateOf(false) }
+    var fallbackToAcousticForHindi by remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -74,9 +75,40 @@ fun VoiceTranslateScreen(
         }
     }
 
+    // High-precision acoustic feature extraction fallback using raw PCM AudioRecord & AcousticKeywordSpotter
+    fun startAcousticRecording() {
+        voiceRecognitionEngine.cancel()
+        isListening = true
+        liveAmplitude = 0f
+        audioRecordEngine.startRecording(
+            onAmplitude = { amp ->
+                liveAmplitude = amp
+            },
+            onSpeechFinished = { pcmBytes, durationMs ->
+                isListening = false
+                liveAmplitude = 0f
+                isTranslating = true
+
+                coroutineScope.launch {
+                    val candidate = if (customInputText.isNotBlank() && isEditingText) {
+                        customInputText.trim()
+                    } else {
+                        AcousticKeywordSpotter.classifyPcmAudio(pcmBytes, durationMs, languageMode)
+                    }
+
+                    recognizedSourceText = candidate
+                    val translation = DynamicTranslationEngine.translate(candidate, languageMode)
+                    currentResult = translation
+                    isTranslating = false
+                    onSpeakSantaliAudio(translation.targetSantaliPhonetic, translation.targetSantaliDevanagari)
+                }
+            }
+        )
+    }
+
     // In-App Speech Recognition Controller (Zero Google modal popups, true verbal word decoding)
     fun startInAppSpeechRecognition() {
-        if (isListening) {
+        if (isListening || audioRecordEngine.isRecording) {
             voiceRecognitionEngine.stopListening()
             audioRecordEngine.stopRecording(cancel = false)
             isListening = false
@@ -84,10 +116,16 @@ fun VoiceTranslateScreen(
             return
         }
 
-        isListening = true
-        liveAmplitude = 0f
+        // If offline speech model pack is missing for Hindi, route directly to on-device acoustic keyword recognizer
+        if (languageMode == LanguagePairMode.HINDI_TO_SANTALI && fallbackToAcousticForHindi) {
+            startAcousticRecording()
+            return
+        }
 
         if (voiceRecognitionEngine.isRecognitionAvailable) {
+            isListening = true
+            liveAmplitude = 0f
+
             voiceRecognitionEngine.startListening(
                 languageMode = languageMode,
                 onAmplitude = { amp ->
@@ -109,39 +147,37 @@ fun VoiceTranslateScreen(
                         onSpeakSantaliAudio(translation.targetSantaliPhonetic, translation.targetSantaliDevanagari)
                     }
                 },
-                onError = { errorMsg ->
+                onError = { errorCode, errorMsg ->
                     isListening = false
                     liveAmplitude = 0f
-                    Log.w("VoiceTranslateScreen", "Speech recognition error: $errorMsg")
-                    Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
-                }
-            )
-        } else {
-            // High-precision acoustic feature extraction fallback using raw PCM AudioRecord & AcousticKeywordSpotter
-            audioRecordEngine.startRecording(
-                onAmplitude = { amp ->
-                    liveAmplitude = amp
-                },
-                onSpeechFinished = { pcmBytes, durationMs ->
-                    isListening = false
-                    liveAmplitude = 0f
-                    isTranslating = true
+                    Log.w("VoiceTranslateScreen", "Speech recognition error ($errorCode): $errorMsg")
 
-                    coroutineScope.launch {
-                        val candidate = if (customInputText.isNotBlank() && isEditingText) {
-                            customInputText.trim()
+                    // Handle missing offline model pack (13), unsupported language (12), server (4), client (5), or network (2)
+                    if (errorCode == 13 || errorCode == 12 || errorCode == 4 || errorCode == 5 || errorCode == 2) {
+                        if (languageMode == LanguagePairMode.HINDI_TO_SANTALI) {
+                            fallbackToAcousticForHindi = true
+                            Toast.makeText(
+                                context,
+                                "ऑफ़लाइन ध्वनि पहचान सक्रिय की जा रही है...",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            AcousticKeywordSpotter.classifyPcmAudio(pcmBytes, durationMs, languageMode)
+                            Toast.makeText(
+                                context,
+                                "Switching to on-device acoustic recognition...",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-
-                        recognizedSourceText = candidate
-                        val translation = DynamicTranslationEngine.translate(candidate, languageMode)
-                        currentResult = translation
-                        isTranslating = false
-                        onSpeakSantaliAudio(translation.targetSantaliPhonetic, translation.targetSantaliDevanagari)
+                        // Instantly fallback to native on-device acoustic keyword recognizer
+                        startAcousticRecording()
+                    } else {
+                        Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
                     }
                 }
             )
+        } else {
+            // High-precision acoustic feature extraction fallback
+            startAcousticRecording()
         }
     }
 
@@ -210,6 +246,21 @@ fun VoiceTranslateScreen(
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (fallbackToAcousticForHindi && languageMode == LanguagePairMode.HINDI_TO_SANTALI) {
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
+                                modifier = Modifier.padding(end = 6.dp)
+                            ) {
+                                Text(
+                                    text = "ध्वनि मोड",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+
                         if (isListening) {
                             Badge(containerColor = MaterialTheme.colorScheme.primary) {
                                 Text(
@@ -319,7 +370,7 @@ fun VoiceTranslateScreen(
         ) {
             FilledIconButton(
                 onClick = {
-                    if (isListening) {
+                    if (isListening || audioRecordEngine.isRecording) {
                         startInAppSpeechRecognition()
                     } else {
                         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
@@ -345,7 +396,7 @@ fun VoiceTranslateScreen(
         }
 
         Text(
-            text = if (isListening) {
+            text = if (isListening || audioRecordEngine.isRecording) {
                 if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Listening to speech..." else "आवाज़ रिकॉर्ड हो रही है..."
             } else if (isTranslating) {
                 if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Translating..." else "अनुवाद हो रहा है..."
