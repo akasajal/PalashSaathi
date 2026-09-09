@@ -3,6 +3,8 @@ package com.palashsaathi.app.ui.screens
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -44,6 +46,7 @@ fun VoiceTranslateScreen(
         )
     }
     var currentResult by remember(languageMode) { mutableStateOf(FLNDictionary.CLASSROOM_ENTRIES[0]) }
+    var showDialects by remember { mutableStateOf(false) }
 
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseScale by infiniteTransition.animateFloat(
@@ -56,7 +59,7 @@ fun VoiceTranslateScreen(
         label = "scale"
     )
 
-    val translationPool = remember {
+    val translationPool = remember(languageMode) {
         val list = mutableListOf<TranslationResult>()
         list.addAll(FLNDictionary.CLASSROOM_ENTRIES)
         list.addAll(
@@ -67,8 +70,8 @@ fun VoiceTranslateScreen(
                     targetSantaliOlChiki = s.santaliOlChiki,
                     targetSantaliDevanagari = s.santaliDevanagari,
                     targetSantaliPhonetic = s.santaliPhonetic,
-                    subtitleHo = "हो: ${s.santaliPhonetic}",
-                    subtitleMundari = "मुण्डारी: ${s.santaliPhonetic}",
+                    subtitleHo = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Ho: ${s.santaliPhonetic}" else "हो: ${s.santaliPhonetic}",
+                    subtitleMundari = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Mundari: ${s.santaliPhonetic}" else "मुण्डारी: ${s.santaliPhonetic}",
                     latencyMs = 210L,
                     fromCorpus = true
                 )
@@ -85,63 +88,12 @@ fun VoiceTranslateScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Mode & Latency Banner
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Offline",
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "100% Offline Edge Mode",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Bolt,
-                        contentDescription = "Latency",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Latency: ${currentResult.latencyMs} ms (< 3.0s)",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        // Teacher Speech Input Card
+        // 1. Teacher Speech Bubble (Conversational Card with Avatar)
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = CardDefaults.outlinedCardBorder().copy(
-                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline)
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            shape = RoundedCornerShape(16.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(20.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
@@ -149,35 +101,54 @@ fun VoiceTranslateScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = if (currentResult.fromCorpus) "शिक्षक / अभ्यास वाक्य (${languageMode.sourceLabel} Corpus):" else "शिक्षक की आवाज़ (${languageMode.sourceLabel}):",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.School,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(6.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Teacher says:" else "शिक्षक की आवाज़:",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     if (isListening) {
                         Badge(containerColor = MaterialTheme.colorScheme.primary) {
-                            Text("सुन रहे हैं... (Listening)", color = MaterialTheme.colorScheme.onPrimary)
+                            Text(
+                                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Listening..." else "सुन रहे हैं...",
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = recognizedSourceText,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp),
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 22.sp),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
-        // Push to Talk Button Area
+        // 2. Large, Joyful Push to Talk Mic Area
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(110.dp)
+                .size(116.dp)
                 .scale(pulseScale)
         ) {
             FilledIconButton(
@@ -188,238 +159,312 @@ fun VoiceTranslateScreen(
                             delay(1200) // simulate teacher speech
                             isListening = false
                             isTranslating = true
-                            delay(250) // sub-300ms offline inference
+                            delay(250) // fast inference
                             val nextEntry = translationPool.random()
                             recognizedSourceText = nextEntry.getSource(languageMode)
                             currentResult = nextEntry
                             isTranslating = false
-                            // Instant voice playback in Santali
                             onSpeakSantaliAudio(currentResult.targetSantaliPhonetic, currentResult.targetSantaliDevanagari)
                         }
                     }
                 },
-                modifier = Modifier.size(90.dp),
+                modifier = Modifier.size(96.dp),
                 shape = CircleShape,
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = if (isListening) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary
+                    containerColor = if (isListening) MaterialTheme.colorScheme.primary.copy(alpha = 0.85f) else MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
                     imageVector = if (isListening) Icons.Default.GraphicEq else Icons.Default.Mic,
                     contentDescription = "Push to Talk",
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(42.dp)
+                    modifier = Modifier.size(46.dp)
                 )
             }
         }
 
         Text(
-            text = if (isListening)
-                "आवाज़ रिकॉर्ड हो रही है..."
-            else if (isTranslating)
-                "20K कोष से अनुवाद हो रहा है..."
-            else if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
-                "Press mic to speak English (Push to Talk)"
-            else
-                "बोलने के लिए माइक दबाएँ (Push to Talk)",
-            style = MaterialTheme.typography.bodyMedium,
+            text = if (isListening) {
+                if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Listening to speech..." else "आवाज़ रिकॉर्ड हो रही है..."
+            } else if (isTranslating) {
+                if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Translating..." else "अनुवाद हो रहा है..."
+            } else if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) {
+                "Tap mic to speak"
+            } else {
+                "बोलने के लिए माइक दबाएँ"
+            },
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(top = 4.dp)
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(top = 6.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
-        // Primary Santali Translation Output Card (Coral Saffron Container)
+        // 3. Cheerful Santali Voice Output Card (Hero Card)
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-            border = CardDefaults.outlinedCardBorder().copy(
-                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
-            ),
-            shape = RoundedCornerShape(16.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(22.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(18.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.VolumeUp,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimary,
+                                modifier = Modifier.padding(6.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "संथाली भाषा में ध्वनि (Primary Voice: Santali)",
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Santali Voice" else "संथाली आवाज़",
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.ExtraBold
                         )
-                        if (currentResult.fromCorpus) {
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Badge(containerColor = MaterialTheme.colorScheme.secondary) {
-                                Text("20K Dataset", color = MaterialTheme.colorScheme.onSecondary, fontSize = 10.sp)
-                            }
-                        }
                     }
-                    IconButton(
+                    FilledIconButton(
                         onClick = {
                             onSpeakSantaliAudio(currentResult.targetSantaliPhonetic, currentResult.targetSantaliDevanagari)
-                        }
+                        },
+                        modifier = Modifier.size(44.dp),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
                         Icon(
                             imageVector = Icons.Default.VolumeUp,
                             contentDescription = "Speak Santali",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(26.dp)
                         )
                     }
                 }
 
-                // Ol Chiki / Devanagari text based on current toggle
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Ol Chiki / Devanagari prominent text
                 Text(
                     text = if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliOlChiki else currentResult.targetSantaliDevanagari,
-                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp),
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.ExtraBold
                 )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                // Transliteration & Pronunciation guide
-                Text(
-                    text = "उच्चारण (Pronunciation): ${currentResult.targetSantaliPhonetic}  •  ${if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliDevanagari else currentResult.targetSantaliOlChiki}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Auxiliary Subtitle HUD (Ho and Mundari) with Yellowish Highlights
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp)),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-            shape = RoundedCornerShape(14.dp)
-        ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                // Friendly pronunciation pill
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                    modifier = Modifier.padding(vertical = 2.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Subtitles,
-                        contentDescription = "Subtitles",
-                        tint = MaterialTheme.colorScheme.tertiary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "लाइव उपशीर्षक (Live Subtitle HUD)",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-
-                // Ho Subtitle Strip
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "हो (Ho): ",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = currentResult.subtitleHo,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Mundari Subtitle Strip
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "मुण्डारी (Mundari): ",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = currentResult.subtitleMundari,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        // Section 1: Quick Teacher Prompts
-        Text(
-            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Quick Classroom Commands" else "त्वरित कक्षा निर्देश (Classroom Commands)",
-            style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
-            color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Start)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        FLNDictionary.CLASSROOM_ENTRIES.take(3).forEach { item ->
-            OutlinedCard(
-                onClick = {
-                    recognizedSourceText = item.getSource(languageMode)
-                    currentResult = item
-                    onSpeakSantaliAudio(item.targetSantaliPhonetic, item.targetSantaliDevanagari)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 3.dp),
-                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Hearing,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = item.getSource(languageMode),
+                            text = currentResult.targetSantaliPhonetic,
+                            style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = if (currentScript == ScriptType.OL_CHIKI) item.targetSantaliOlChiki else item.targetSantaliDevanagari,
-                            fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            text = "•  ${if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliDevanagari else currentResult.targetSantaliOlChiki}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Play",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Section 2: 20K Dataset Featured Sentences Showcase
+        // 4. Optional Expandable Dialect Notes (Ho & Mundari) - clean and unobtrusive!
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = CardDefaults.outlinedCardBorder().copy(
+                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+            ),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(modifier = Modifier.padding(12.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showDialects = !showDialects },
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Subtitles,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Related Dialects (Ho & Mundari)" else "संबंधित बोलियाँ (हो और मुण्डारी)",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Icon(
+                        imageVector = if (showDialects) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                        contentDescription = "Toggle Dialects",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                if (showDialects) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Ho: " else "हो: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = currentResult.subtitleHo,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Mundari: " else "मुण्डारी: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = currentResult.subtitleMundari,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // 5. Quick Classroom Prompts (Horizontal Carousel with Playful Cards)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.RecordVoiceOver,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Quick Classroom Phrases" else "त्वरित कक्षा निर्देश",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            FLNDictionary.CLASSROOM_ENTRIES.take(6).forEach { item ->
+                Card(
+                    onClick = {
+                        recognizedSourceText = item.getSource(languageMode)
+                        currentResult = item
+                        onSpeakSantaliAudio(item.targetSantaliPhonetic, item.targetSantaliDevanagari)
+                    },
+                    modifier = Modifier.width(170.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = CardDefaults.outlinedCardBorder().copy(
+                        brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                modifier = Modifier.size(28.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PlayArrow,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.padding(5.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = item.getSource(languageMode),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = if (currentScript == ScriptType.OL_CHIKI) item.targetSantaliOlChiki else item.targetSantaliDevanagari,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // 6. Section 2: 20K Dataset Sample Sentences (Clean Card List)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -428,20 +473,20 @@ fun VoiceTranslateScreen(
                 imageVector = Icons.Default.Dataset,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "20K वाक्य कोष से उदाहरण (Corpus Sentences)",
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
+                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "20K Corpus Samples" else "20K वाक्य कोष उदाहरण",
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         FLNDictionary.CORPUS_FEATURED_SENTENCES.take(3).forEach { sentence ->
-            OutlinedCard(
+            Card(
                 onClick = {
                     recognizedSourceText = sentence.english
                     currentResult = TranslationResult(
@@ -450,8 +495,8 @@ fun VoiceTranslateScreen(
                         targetSantaliOlChiki = sentence.santaliOlChiki,
                         targetSantaliDevanagari = sentence.santaliDevanagari,
                         targetSantaliPhonetic = sentence.santaliPhonetic,
-                        subtitleHo = "हो: ${sentence.santaliPhonetic}",
-                        subtitleMundari = "मुण्डारी: ${sentence.santaliPhonetic}",
+                        subtitleHo = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Ho: ${sentence.santaliPhonetic}" else "हो: ${sentence.santaliPhonetic}",
+                        subtitleMundari = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Mundari: ${sentence.santaliPhonetic}" else "मुण्डारी: ${sentence.santaliPhonetic}",
                         latencyMs = 190L,
                         fromCorpus = true
                     )
@@ -459,14 +504,17 @@ fun VoiceTranslateScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 3.dp),
-                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = RoundedCornerShape(10.dp)
+                    .padding(vertical = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = CardDefaults.outlinedCardBorder().copy(
+                    brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                ),
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(horizontal = 14.dp, vertical = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -477,19 +525,26 @@ fun VoiceTranslateScreen(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = if (currentScript == ScriptType.OL_CHIKI) sentence.santaliOlChiki else sentence.santaliDevanagari,
-                            fontSize = 12.sp,
+                            fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.secondary,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Play",
-                        tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Play",
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.padding(6.dp)
+                        )
+                    }
                 }
             }
         }

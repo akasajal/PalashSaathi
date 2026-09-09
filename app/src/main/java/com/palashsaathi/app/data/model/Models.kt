@@ -38,18 +38,30 @@ data class TranslationResult(
     }
 }
 
-enum class FLNGrade(val label: String) {
-    GRADE_1("Grade 1 (कक्षा 1)"),
-    GRADE_2("Grade 2 (कक्षा 2)"),
-    GRADE_3("Grade 3 (कक्षा 3)")
+enum class FLNGrade(val labelHindi: String, val labelEnglish: String) {
+    GRADE_1("कक्षा 1 (Grade 1)", "Grade 1"),
+    GRADE_2("कक्षा 2 (Grade 2)", "Grade 2"),
+    GRADE_3("कक्षा 3 (Grade 3)", "Grade 3");
+
+    val label: String get() = labelHindi
+
+    fun getLabel(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI) labelEnglish else labelHindi
+    }
 }
 
-enum class FLNCategory(val label: String) {
-    NUMERACY("Numeracy (संख्या व गणित)"),
-    LITERACY("Literacy (भाषा व शब्द)"),
-    CLASSROOM_COMMANDS("Classroom Prompts (कक्षा निर्देश)"),
-    CORPUS_VOCAB("20K Vocab (कोष शब्दावली)"),
-    CORPUS_READING("20K Sentences (वाक्य व गद्यांश)")
+enum class FLNCategory(val labelHindi: String, val labelEnglish: String) {
+    NUMERACY("संख्या व गणित (Numeracy)", "Numeracy"),
+    LITERACY("भाषा व शब्द (Literacy)", "Literacy"),
+    CLASSROOM_COMMANDS("कक्षा निर्देश (Prompts)", "Classroom Prompts"),
+    CORPUS_VOCAB("20K कोष शब्दावली", "20K Corpus Vocab"),
+    CORPUS_READING("20K वाक्य व गद्यांश", "20K Corpus Sentences");
+
+    val label: String get() = labelHindi
+
+    fun getLabel(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI) labelEnglish else labelHindi
+    }
 }
 
 data class FlashcardItem(

@@ -26,12 +26,22 @@ import com.palashsaathi.app.engine.AudioSynthesisEngine
 import com.palashsaathi.app.ui.theme.*
 import kotlinx.coroutines.launch
 
-enum class AppTab(val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
-    VOICE("बोलें", Icons.Default.Mic),
-    WORKSHEET("अभ्यास", Icons.Default.Description),
-    FLASHCARDS("कार्ड", Icons.Default.Style),
-    PHRASEBOOK("शब्दावली", Icons.Default.MenuBook),
-    SETTINGS("सेटिंग्स", Icons.Default.Settings)
+enum class AppTab(
+    val labelHindi: String,
+    val labelEnglish: String,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    VOICE("बोलें", "Voice", Icons.Default.Mic),
+    WORKSHEET("अभ्यास", "Worksheet", Icons.Default.Description),
+    FLASHCARDS("कार्ड", "Cards", Icons.Default.Style),
+    PHRASEBOOK("शब्दावली", "Vocab", Icons.Default.MenuBook),
+    SETTINGS("सेटिंग्स", "Settings", Icons.Default.Settings);
+
+    val label: String get() = labelHindi
+
+    fun getLabel(mode: com.palashsaathi.app.data.model.LanguagePairMode): String {
+        return if (mode == com.palashsaathi.app.data.model.LanguagePairMode.ENGLISH_TO_SANTALI) labelEnglish else labelHindi
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,10 +167,10 @@ fun MainScreen(
                     NavigationBarItem(
                         selected = selectedTab == tab,
                         onClick = { selectedTab = tab },
-                        icon = { Icon(imageVector = tab.icon, contentDescription = tab.label) },
+                        icon = { Icon(imageVector = tab.icon, contentDescription = tab.getLabel(currentLanguageMode)) },
                         label = {
                             Text(
-                                text = tab.label,
+                                text = tab.getLabel(currentLanguageMode),
                                 fontSize = 11.sp,
                                 fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal
                             )
