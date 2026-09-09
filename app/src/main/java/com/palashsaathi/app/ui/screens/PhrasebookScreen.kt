@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palashsaathi.app.data.FLNDictionary
 import com.palashsaathi.app.data.SantaliCorpusRepository
+import com.palashsaathi.app.data.model.LanguagePairMode
 import com.palashsaathi.app.data.model.ScriptType
 
 enum class PhrasebookMode {
@@ -28,6 +29,7 @@ enum class PhrasebookMode {
 @Composable
 fun PhrasebookScreen(
     currentScript: ScriptType,
+    languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI,
     onSpeakSantaliAudio: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -42,6 +44,7 @@ fun PhrasebookScreen(
         } else {
             FLNDictionary.CLASSROOM_ENTRIES.filter {
                 it.sourceHindi.contains(searchQuery, ignoreCase = true) ||
+                it.sourceEnglish.contains(searchQuery, ignoreCase = true) ||
                 it.targetSantaliDevanagari.contains(searchQuery, ignoreCase = true) ||
                 it.targetSantaliPhonetic.contains(searchQuery, ignoreCase = true) ||
                 it.targetSantaliOlChiki.contains(searchQuery)
@@ -65,7 +68,10 @@ fun PhrasebookScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "संथाली शब्दावली व वाक्य कोष (Santali Phrasebook & Corpus)",
+            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                "Santali Phrasebook & Corpus (English to Santali)"
+            else
+                "संथाली शब्दावली व वाक्य कोष (Santali Phrasebook & Corpus)",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
@@ -112,10 +118,14 @@ fun PhrasebookScreen(
             onValueChange = { searchQuery = it },
             placeholder = {
                 Text(
-                    if (selectedMode == PhrasebookMode.CLASSROOM_PROMPTS)
-                        "खोजें (Search Hindi / Santali)..."
-                    else
+                    if (selectedMode == PhrasebookMode.CLASSROOM_PROMPTS) {
+                        if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                            "Search prompts (English / Santali)..."
+                        else
+                            "खोजें (Search Hindi / Santali)..."
+                    } else {
                         "खोजें (Search 20,000 sentences: school, book, tree...)"
+                    }
                 )
             },
             leadingIcon = {
@@ -154,11 +164,19 @@ fun PhrasebookScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = phrase.sourceHindi,
+                                        text = phrase.getSource(languageMode),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
+                                    val altText = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) phrase.sourceHindi else phrase.sourceEnglish
+                                    if (altText.isNotBlank()) {
+                                        Text(
+                                            text = altText,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
                                         text = if (currentScript == ScriptType.OL_CHIKI) phrase.targetSantaliOlChiki else phrase.targetSantaliDevanagari,

@@ -16,9 +16,13 @@ import java.util.Locale
 object WorksheetPdfGenerator {
 
     /**
-     * Generates a printable A4 bilingual FLN worksheet (Hindi <-> Santali) in PDF format.
+     * Generates a printable A4 bilingual FLN worksheet (Hindi/English <-> Santali) in PDF format.
      */
-    fun generatePdf(context: Context, worksheet: GeneratedWorksheet): File {
+    fun generatePdf(
+        context: Context,
+        worksheet: GeneratedWorksheet,
+        languageMode: com.palashsaathi.app.data.model.LanguagePairMode = com.palashsaathi.app.data.model.LanguagePairMode.HINDI_TO_SANTALI
+    ): File {
         val document = PdfDocument()
 
         // Standard A4 page size in points: 595 x 842
@@ -62,9 +66,13 @@ object WorksheetPdfGenerator {
         var y = 40f
 
         // Title & Header
-        canvas.drawText("PalashSaathi - FLN Bilingual Worksheet (द्विभाषी अभ्यास पत्र)", 40f, y, paintHeader)
+        val headerTitle = if (languageMode == com.palashsaathi.app.data.model.LanguagePairMode.ENGLISH_TO_SANTALI)
+            "PalashSaathi - FLN Bilingual Worksheet (English <-> Santali)"
+        else
+            "PalashSaathi - FLN Bilingual Worksheet (द्विभाषी अभ्यास पत्र)"
+        canvas.drawText(headerTitle, 40f, y, paintHeader)
         y += 20f
-        canvas.drawText("${worksheet.titleHindi}  |  ${worksheet.titleSantaliDevanagari} (${worksheet.titleSantaliOlChiki})", 40f, y, paintSubHeader)
+        canvas.drawText("${worksheet.getTitle(languageMode)}  |  ${worksheet.titleSantaliDevanagari} (${worksheet.titleSantaliOlChiki})", 40f, y, paintSubHeader)
         y += 15f
         canvas.drawText("Level: ${worksheet.grade.label}  •  Category: ${worksheet.category.label}", 40f, y, paintSubHeader)
         y += 15f
@@ -90,14 +98,14 @@ object WorksheetPdfGenerator {
             val boxHeight = 55f
             canvas.drawRect(40f, boxTop, 555f, boxTop + boxHeight, paintBox)
 
-            // Number and Question in Hindi
-            canvas.drawText("$num. ${exercise.questionHindi}", 50f, y + 5f, paintBold)
+            // Number and Question in Source Language (Hindi or English)
+            canvas.drawText("$num. ${exercise.getQuestion(languageMode)}", 50f, y + 5f, paintBold)
 
             // Question in Santali (Devanagari + Ol Chiki representation)
             canvas.drawText("   संथाली (Santali): ${exercise.questionSantaliDevanagari}  •  ${exercise.questionSantaliOlChiki}", 50f, y + 22f, paintBody)
 
             // Hint & Answer line
-            canvas.drawText("   संकेत (Hint): ${exercise.hintHindi} / ${exercise.hintSantali}", 50f, y + 36f, paintSubHeader)
+            canvas.drawText("   संकेत (Hint): ${exercise.getHint(languageMode)} / ${exercise.hintSantali}", 50f, y + 36f, paintSubHeader)
 
             // Answer checkbox or write area
             canvas.drawRect(470f, y - 5f, 545f, y + 30f, paintBox)

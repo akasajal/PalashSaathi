@@ -19,12 +19,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.palashsaathi.app.R
+import com.palashsaathi.app.data.model.LanguagePairMode
 import com.palashsaathi.app.ui.theme.AppThemeMode
 
 @Composable
 fun SettingsScreen(
     currentThemeMode: AppThemeMode,
     onThemeModeChanged: (AppThemeMode) -> Unit,
+    currentLanguageMode: LanguagePairMode,
+    onLanguageModeChanged: (LanguagePairMode) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -47,6 +50,62 @@ fun SettingsScreen(
         )
 
         Spacer(modifier = Modifier.height(20.dp))
+
+        // Translation Mode Section Header
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Default.Translate,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(22.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "अनुवाद भाषा मोड (Translation Mode)",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Language Pair Options Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = CardDefaults.outlinedCardBorder().copy(
+                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline)
+            ),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                SettingsOptionRow(
+                    titleHindi = "हिन्दी से संथाली",
+                    titleEnglish = "Hindi to Santali",
+                    description = "Hindi speech & prompts translate into Santali",
+                    icon = Icons.Default.Translate,
+                    isSelected = currentLanguageMode == LanguagePairMode.HINDI_TO_SANTALI,
+                    onClick = { onLanguageModeChanged(LanguagePairMode.HINDI_TO_SANTALI) }
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                SettingsOptionRow(
+                    titleHindi = "अंग्रेज़ी से संथाली",
+                    titleEnglish = "English to Santali",
+                    description = "English speech & prompts match directly with 20K corpus",
+                    icon = Icons.Default.Language,
+                    isSelected = currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI,
+                    onClick = { onLanguageModeChanged(LanguagePairMode.ENGLISH_TO_SANTALI) }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Appearance & Theme Section Header
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -77,7 +136,7 @@ fun SettingsScreen(
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(modifier = Modifier.padding(8.dp)) {
-                ThemeOptionRow(
+                SettingsOptionRow(
                     titleHindi = "सिस्टम डिफ़ॉल्ट",
                     titleEnglish = "System Default",
                     description = "Follows your tablet / phone OS system setting",
@@ -91,7 +150,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                ThemeOptionRow(
+                SettingsOptionRow(
                     titleHindi = "लाइट मोड",
                     titleEnglish = "Light Mode",
                     description = "High-contrast daylight mode for classroom teaching",
@@ -105,7 +164,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                ThemeOptionRow(
+                SettingsOptionRow(
                     titleHindi = "डार्क मोड",
                     titleEnglish = "Dark Mode",
                     description = "Low-glare dark surface for reduced eye strain",
@@ -177,7 +236,7 @@ fun SettingsScreen(
 }
 
 @Composable
-fun ThemeOptionRow(
+fun SettingsOptionRow(
     titleHindi: String,
     titleEnglish: String,
     description: String,

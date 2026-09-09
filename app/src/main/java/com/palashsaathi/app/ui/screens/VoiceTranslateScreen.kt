@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palashsaathi.app.data.FLNDictionary
+import com.palashsaathi.app.data.model.LanguagePairMode
 import com.palashsaathi.app.data.model.ScriptType
 import com.palashsaathi.app.data.model.TranslationResult
 import kotlinx.coroutines.delay
@@ -27,14 +28,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun VoiceTranslateScreen(
     currentScript: ScriptType,
+    languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI,
     onSpeakSantaliAudio: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isListening by remember { mutableStateOf(false) }
     var isTranslating by remember { mutableStateOf(false) }
-    var recognizedHindi by remember { mutableStateOf("किताब खोलो") }
-    var currentResult by remember { mutableStateOf(FLNDictionary.CLASSROOM_ENTRIES[0]) }
+    var recognizedSourceText by remember(languageMode) {
+        mutableStateOf(
+            if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                FLNDictionary.CLASSROOM_ENTRIES[0].sourceEnglish
+            else
+                FLNDictionary.CLASSROOM_ENTRIES[0].sourceHindi
+        )
+    }
+    var currentResult by remember(languageMode) { mutableStateOf(FLNDictionary.CLASSROOM_ENTRIES[0]) }
 
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseScale by infiniteTransition.animateFloat(
@@ -54,6 +63,7 @@ fun VoiceTranslateScreen(
             FLNDictionary.CORPUS_FEATURED_SENTENCES.map { s ->
                 TranslationResult(
                     sourceHindi = s.english,
+                    sourceEnglish = s.english,
                     targetSantaliOlChiki = s.santaliOlChiki,
                     targetSantaliDevanagari = s.santaliDevanagari,
                     targetSantaliPhonetic = s.santaliPhonetic,
@@ -140,7 +150,7 @@ fun VoiceTranslateScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (currentResult.fromCorpus) "शिक्षक / अभ्यास वाक्य (Teacher Speech / Corpus):" else "शिक्षक की आवाज़ (Teacher Voice - Hindi):",
+                        text = if (currentResult.fromCorpus) "शिक्षक / अभ्यास वाक्य (${languageMode.sourceLabel} Corpus):" else "शिक्षक की आवाज़ (${languageMode.sourceLabel}):",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.SemiBold
@@ -153,7 +163,7 @@ fun VoiceTranslateScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = recognizedHindi,
+                    text = recognizedSourceText,
                     style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
@@ -180,7 +190,7 @@ fun VoiceTranslateScreen(
                             isTranslating = true
                             delay(250) // sub-300ms offline inference
                             val nextEntry = translationPool.random()
-                            recognizedHindi = nextEntry.sourceHindi
+                            recognizedSourceText = nextEntry.getSource(languageMode)
                             currentResult = nextEntry
                             isTranslating = false
                             // Instant voice playback in Santali
@@ -204,7 +214,14 @@ fun VoiceTranslateScreen(
         }
 
         Text(
-            text = if (isListening) "आवाज़ रिकॉर्ड हो रही है..." else if (isTranslating) "20K कोष से अनुवाद हो रहा है..." else "बोलने के लिए माइक दबाएँ (Push to Talk)",
+            text = if (isListening)
+                "आवाज़ रिकॉर्ड हो रही है..."
+            else if (isTranslating)
+                "20K कोष से अनुवाद हो रहा है..."
+            else if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                "Press mic to speak English (Push to Talk)"
+            else
+                "बोलने के लिए माइक दबाएँ (Push to Talk)",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.Medium,
@@ -350,7 +367,7 @@ fun VoiceTranslateScreen(
 
         // Section 1: Quick Teacher Prompts
         Text(
-            text = "त्वरित कक्षा निर्देश (Classroom Commands)",
+            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Quick Classroom Commands" else "त्वरित कक्षा निर्देश (Classroom Commands)",
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 16.sp),
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -361,7 +378,7 @@ fun VoiceTranslateScreen(
         FLNDictionary.CLASSROOM_ENTRIES.take(3).forEach { item ->
             OutlinedCard(
                 onClick = {
-                    recognizedHindi = item.sourceHindi
+                    recognizedSourceText = item.getSource(languageMode)
                     currentResult = item
                     onSpeakSantaliAudio(item.targetSantaliPhonetic, item.targetSantaliDevanagari)
                 },
@@ -380,7 +397,7 @@ fun VoiceTranslateScreen(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = item.sourceHindi,
+                            text = item.getSource(languageMode),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -426,9 +443,10 @@ fun VoiceTranslateScreen(
         FLNDictionary.CORPUS_FEATURED_SENTENCES.take(3).forEach { sentence ->
             OutlinedCard(
                 onClick = {
-                    recognizedHindi = sentence.english
+                    recognizedSourceText = sentence.english
                     currentResult = TranslationResult(
                         sourceHindi = sentence.english,
+                        sourceEnglish = sentence.english,
                         targetSantaliOlChiki = sentence.santaliOlChiki,
                         targetSantaliDevanagari = sentence.santaliDevanagari,
                         targetSantaliPhonetic = sentence.santaliPhonetic,

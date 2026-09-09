@@ -11,6 +11,7 @@ object FLNDictionary {
     val CLASSROOM_ENTRIES = listOf(
         TranslationResult(
             sourceHindi = "किताब खोलो",
+            sourceEnglish = "Open your book",
             targetSantaliOlChiki = "ᱯᱩᱛᱷᱤ ᱡᱷᱤᱡᱽᱢᱮ",
             targetSantaliDevanagari = "पुथी झिजमे",
             targetSantaliPhonetic = "Puthi jhijme",
@@ -20,6 +21,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "ध्यान से सुनो",
+            sourceEnglish = "Listen carefully",
             targetSantaliOlChiki = "ᱢᱚᱱ ᱮᱢ ᱠᱟᱛᱮ ᱟᱧᱡᱚᱢᱯᱮ",
             targetSantaliDevanagari = "मोन देते आंजोमपे",
             targetSantaliPhonetic = "Mon dete anjompe",
@@ -29,6 +31,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "शांत रहो",
+            sourceEnglish = "Be quiet / Keep silent",
             targetSantaliOlChiki = "ᱛᱷᱤᱨ ᱠᱚᱜᱳᱢᱮ",
             targetSantaliDevanagari = "थिर कोगोमे",
             targetSantaliPhonetic = "Thir kogome",
@@ -38,6 +41,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "यहाँ आओ",
+            sourceEnglish = "Come here",
             targetSantaliOlChiki = "ᱱᱚᱸᱰᱮ ᱦᱤᱡᱩᱜᱽᱢᱮ",
             targetSantaliDevanagari = "नोंडे हेजमे",
             targetSantaliPhonetic = "Nonde hejme",
@@ -47,6 +51,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "बैठ जाओ",
+            sourceEnglish = "Sit down",
             targetSantaliOlChiki = "ᱫᱩᱲᱩᱵᱽᱢᱮ",
             targetSantaliDevanagari = "दुड़ुपमे",
             targetSantaliPhonetic = "Durupme",
@@ -56,6 +61,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "खड़े हो जाओ",
+            sourceEnglish = "Stand up",
             targetSantaliOlChiki = "ᱛᱤᱸᱜᱩᱱᱢᱮ",
             targetSantaliDevanagari = "तिंगुनमे",
             targetSantaliPhonetic = "Tingunme",
@@ -65,6 +71,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "ब्लैकबोर्ड पर देखो",
+            sourceEnglish = "Look at the blackboard",
             targetSantaliOlChiki = "ᱵᱳᱨᱰ ᱨᱮ ᱧᱮᱞᱢᱮ",
             targetSantaliDevanagari = "बोर्ड रे ञेलमे",
             targetSantaliPhonetic = "Board re nyelme",
@@ -74,6 +81,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "शाबाश बहुत अच्छा",
+            sourceEnglish = "Well done, very good",
             targetSantaliOlChiki = "ᱟᱹᱰᱤ ᱢᱚᱡᱽ",
             targetSantaliDevanagari = "आडी मोज",
             targetSantaliPhonetic = "Adi moj",
@@ -83,6 +91,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "अपना नाम बताओ",
+            sourceEnglish = "Tell your name",
             targetSantaliOlChiki = "ᱟᱢᱟᱜ ᱧᱩᱛᱩᱢ ᱞᱟᱹᱭᱢᱮ",
             targetSantaliDevanagari = "आमअः ञुतुम लयमे",
             targetSantaliPhonetic = "Amah nyutum layme",
@@ -92,6 +101,7 @@ object FLNDictionary {
         ),
         TranslationResult(
             sourceHindi = "कॉपी में लिखो",
+            sourceEnglish = "Write in notebook",
             targetSantaliOlChiki = "ᱠᱷᱟᱛᱟ ᱨᱮ ᱚᱞᱢᱮ",
             targetSantaliDevanagari = "खाता रे ओलमे",
             targetSantaliPhonetic = "Khata re olme",
@@ -105,6 +115,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_1",
             hindiWord = "एक (1)",
+            englishWord = "One (1)",
             santaliOlChiki = "᱑ (ᱢᱤᱫ)",
             santaliDevanagari = "मिद् (१)",
             santaliPhonetic = "Mid",
@@ -116,6 +127,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_2",
             hindiWord = "दो (2)",
+            englishWord = "Two (2)",
             santaliOlChiki = "᱒ (ᱵᱟᱨ)",
             santaliDevanagari = "बार (२)",
             santaliPhonetic = "Bar",
@@ -127,6 +139,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_3",
             hindiWord = "तीन (3)",
+            englishWord = "Three (3)",
             santaliOlChiki = "᱓ (ᱯᱮ)",
             santaliDevanagari = "पे (३)",
             santaliPhonetic = "Pe",
@@ -138,6 +151,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_4",
             hindiWord = "चार (4)",
+            englishWord = "Four (4)",
             santaliOlChiki = "᱔ (ᱯᱳᱱ)",
             santaliDevanagari = "पोन (४)",
             santaliPhonetic = "Pon",
@@ -149,6 +163,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_5",
             hindiWord = "पाँच (5)",
+            englishWord = "Five (5)",
             santaliOlChiki = "᱕ (ᱢᱚᱬᱮ)",
             santaliDevanagari = "मोँड़े (५)",
             santaliPhonetic = "Monre",
@@ -160,6 +175,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_water",
             hindiWord = "पानी",
+            englishWord = "Water",
             santaliOlChiki = "ᱫᱟᱜ",
             santaliDevanagari = "दाः",
             santaliPhonetic = "Dah",
@@ -171,6 +187,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_tree",
             hindiWord = "पेड़ / वृक्ष",
+            englishWord = "Tree",
             santaliOlChiki = "ᱫᱟᱨᱮ",
             santaliDevanagari = "दारे",
             santaliPhonetic = "Dare",
@@ -182,6 +199,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_sun",
             hindiWord = "सूरज / सूर्य",
+            englishWord = "Sun",
             santaliOlChiki = "ᱥᱤᱧ",
             santaliDevanagari = "सिंगी",
             santaliPhonetic = "Singi",
@@ -193,6 +211,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_cow",
             hindiWord = "गाय",
+            englishWord = "Cow",
             santaliOlChiki = "ᱜᱟᱹᱭ",
             santaliDevanagari = "गाई",
             santaliPhonetic = "Gai",
@@ -204,6 +223,7 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_bird",
             hindiWord = "चिड़िया / पक्षी",
+            englishWord = "Bird",
             santaliOlChiki = "ᱪᱮᱬᱮ",
             santaliDevanagari = "चेँड़े",
             santaliPhonetic = "Chenre",
@@ -216,7 +236,8 @@ object FLNDictionary {
         // --- 20K Corpus Dataset Vocabulary Flashcards ---
         FlashcardItem(
             id = "corp_book",
-            hindiWord = "किताब / पुस्तक (Book)",
+            hindiWord = "किताब / पुस्तक",
+            englishWord = "Book",
             santaliOlChiki = "ᱯᱚᱛᱚᱵ",
             santaliDevanagari = "पोतोब",
             santaliPhonetic = "Potob",
@@ -227,7 +248,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_learn",
-            hindiWord = "सीखना / शिक्षा (Learn)",
+            hindiWord = "सीखना / शिक्षा",
+            englishWord = "Learn / Education",
             santaliOlChiki = "ᱥᱮᱬᱟᱭᱟ",
             santaliDevanagari = "सेणाया",
             santaliPhonetic = "Senaya",
@@ -238,7 +260,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_page",
-            hindiWord = "पन्ना / पृष्ठ (Page)",
+            hindiWord = "पन्ना / पृष्ठ",
+            englishWord = "Page / Leaf",
             santaliOlChiki = "ᱥᱟᱠᱟᱢ",
             santaliDevanagari = "साकाम",
             santaliPhonetic = "Sakam",
@@ -249,7 +272,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_image",
-            hindiWord = "चित्र / तस्वीर (Picture)",
+            hindiWord = "चित्र / तस्वीर",
+            englishWord = "Picture / Image",
             santaliOlChiki = "ᱪᱤᱛᱟᱹᱨ",
             santaliDevanagari = "चितार",
             santaliPhonetic = "Chitar",
@@ -260,7 +284,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_hand",
-            hindiWord = "हाथ (Hand / Arm)",
+            hindiWord = "हाथ / भुजा",
+            englishWord = "Hand / Arm",
             santaliOlChiki = "ᱛᱤ",
             santaliDevanagari = "ती",
             santaliPhonetic = "Ti",
@@ -271,7 +296,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_body",
-            hindiWord = "शरीर / देह (Body)",
+            hindiWord = "शरीर / देह",
+            englishWord = "Body",
             santaliOlChiki = "ᱦᱚᱲᱢᱚ",
             santaliDevanagari = "होड़मो",
             santaliPhonetic = "Hormo",
@@ -282,7 +308,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_river",
-            hindiWord = "नदी (River)",
+            hindiWord = "नदी",
+            englishWord = "River",
             santaliOlChiki = "ᱜᱟᱰᱟ",
             santaliDevanagari = "गाडा",
             santaliPhonetic = "Gada",
@@ -293,7 +320,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_gold",
-            hindiWord = "सोना / स्वर्ण (Gold)",
+            hindiWord = "सोना / स्वर्ण",
+            englishWord = "Gold",
             santaliOlChiki = "ᱥᱟᱢᱟᱱᱚᱢ",
             santaliDevanagari = "सामानोम",
             santaliPhonetic = "Samanom",
@@ -304,7 +332,8 @@ object FLNDictionary {
         ),
         FlashcardItem(
             id = "corp_write",
-            hindiWord = "लिखना (Write / Script)",
+            hindiWord = "लिखना / लिपि",
+            englishWord = "Write / Script",
             santaliOlChiki = "ᱚᱞ",
             santaliDevanagari = "ओल",
             santaliPhonetic = "Ol",
@@ -353,60 +382,123 @@ object FLNDictionary {
         )
     )
 
-    fun findMatchingTranslation(inputHindi: String): TranslationResult {
-        val trimmed = inputHindi.trim()
+    fun findMatchingTranslation(
+        input: String,
+        mode: com.palashsaathi.app.data.model.LanguagePairMode = com.palashsaathi.app.data.model.LanguagePairMode.HINDI_TO_SANTALI
+    ): TranslationResult {
+        val trimmed = input.trim()
 
-        // 1. Check fixed classroom entries
-        val exact = CLASSROOM_ENTRIES.firstOrNull {
-            it.sourceHindi.equals(trimmed, ignoreCase = true) ||
-            trimmed.contains(it.sourceHindi) ||
-            it.sourceHindi.contains(trimmed)
-        }
-        if (exact != null) {
-            return exact
-        }
+        if (mode == com.palashsaathi.app.data.model.LanguagePairMode.ENGLISH_TO_SANTALI) {
+            // 1. Check fixed classroom entries by English
+            val exactEn = CLASSROOM_ENTRIES.firstOrNull {
+                it.sourceEnglish.equals(trimmed, ignoreCase = true) ||
+                trimmed.contains(it.sourceEnglish, ignoreCase = true) ||
+                it.sourceEnglish.contains(trimmed, ignoreCase = true)
+            }
+            if (exactEn != null) return exactEn
 
-        // 2. Check foundational flashcards
-        val fc = FLASHCARD_ITEMS.firstOrNull {
-            it.hindiWord.contains(trimmed, ignoreCase = true) ||
-            trimmed.contains(it.hindiWord.split(" ").first())
-        }
-        if (fc != null) {
+            // 2. Check foundational flashcards by English
+            val fcEn = FLASHCARD_ITEMS.firstOrNull {
+                it.englishWord.contains(trimmed, ignoreCase = true) ||
+                trimmed.contains(it.englishWord.split(" ").first(), ignoreCase = true)
+            }
+            if (fcEn != null) {
+                return TranslationResult(
+                    sourceHindi = fcEn.hindiWord,
+                    sourceEnglish = fcEn.englishWord,
+                    targetSantaliOlChiki = fcEn.santaliOlChiki,
+                    targetSantaliDevanagari = fcEn.santaliDevanagari,
+                    targetSantaliPhonetic = fcEn.santaliPhonetic,
+                    subtitleHo = fcEn.hoSubtitle,
+                    subtitleMundari = fcEn.mundariSubtitle,
+                    latencyMs = 180L
+                )
+            }
+
+            // 3. Check 20K Corpus match directly by English
+            val corpusMatch = SantaliCorpusRepository.findBestMatch(trimmed)
+            if (corpusMatch != null) {
+                return TranslationResult(
+                    sourceHindi = corpusMatch.english,
+                    sourceEnglish = corpusMatch.english,
+                    targetSantaliOlChiki = corpusMatch.santaliOlChiki,
+                    targetSantaliDevanagari = corpusMatch.santaliDevanagari.ifBlank { corpusMatch.santaliOlChiki },
+                    targetSantaliPhonetic = corpusMatch.santaliPhonetic,
+                    subtitleHo = "हो: ${corpusMatch.santaliPhonetic}",
+                    subtitleMundari = "मुण्डारी: ${corpusMatch.santaliPhonetic}",
+                    latencyMs = 210L,
+                    fromCorpus = true
+                )
+            }
+
+            // 4. Fallback synthesis
             return TranslationResult(
-                sourceHindi = fc.hindiWord,
-                targetSantaliOlChiki = fc.santaliOlChiki,
-                targetSantaliDevanagari = fc.santaliDevanagari,
-                targetSantaliPhonetic = fc.santaliPhonetic,
-                subtitleHo = fc.hoSubtitle,
-                subtitleMundari = fc.mundariSubtitle,
-                latencyMs = 180L
+                sourceHindi = input,
+                sourceEnglish = input,
+                targetSantaliOlChiki = "ᱚᱞ ᱪᱤᱠᱤ: $input",
+                targetSantaliDevanagari = "संथाली अनुवाद: $input",
+                targetSantaliPhonetic = "Santali: $input",
+                subtitleHo = "हो: $input",
+                subtitleMundari = "मुण्डारी: $input",
+                latencyMs = 380L
+            )
+        } else {
+            // Hindi to Santali
+            // 1. Check fixed classroom entries
+            val exact = CLASSROOM_ENTRIES.firstOrNull {
+                it.sourceHindi.equals(trimmed, ignoreCase = true) ||
+                trimmed.contains(it.sourceHindi) ||
+                it.sourceHindi.contains(trimmed)
+            }
+            if (exact != null) {
+                return exact
+            }
+
+            // 2. Check foundational flashcards
+            val fc = FLASHCARD_ITEMS.firstOrNull {
+                it.hindiWord.contains(trimmed, ignoreCase = true) ||
+                trimmed.contains(it.hindiWord.split(" ").first())
+            }
+            if (fc != null) {
+                return TranslationResult(
+                    sourceHindi = fc.hindiWord,
+                    sourceEnglish = fc.englishWord,
+                    targetSantaliOlChiki = fc.santaliOlChiki,
+                    targetSantaliDevanagari = fc.santaliDevanagari,
+                    targetSantaliPhonetic = fc.santaliPhonetic,
+                    subtitleHo = fc.hoSubtitle,
+                    subtitleMundari = fc.mundariSubtitle,
+                    latencyMs = 180L
+                )
+            }
+
+            // 3. Check 20K Corpus match
+            val corpusMatch = SantaliCorpusRepository.findBestMatch(trimmed)
+            if (corpusMatch != null) {
+                return TranslationResult(
+                    sourceHindi = input,
+                    sourceEnglish = corpusMatch.english,
+                    targetSantaliOlChiki = corpusMatch.santaliOlChiki,
+                    targetSantaliDevanagari = corpusMatch.santaliDevanagari.ifBlank { corpusMatch.santaliOlChiki },
+                    targetSantaliPhonetic = corpusMatch.santaliPhonetic,
+                    subtitleHo = "हो: ${corpusMatch.santaliPhonetic}",
+                    subtitleMundari = "मुण्डारी: ${corpusMatch.santaliPhonetic}",
+                    latencyMs = 210L,
+                    fromCorpus = true
+                )
+            }
+
+            // 4. Fallback synthesis
+            return TranslationResult(
+                sourceHindi = input,
+                sourceEnglish = input,
+                targetSantaliOlChiki = "ᱚᱞ ᱪᱤᱠᱤ: $input",
+                targetSantaliDevanagari = "संथाली अनुवाद: $input",
+                targetSantaliPhonetic = "Santali anuvad: $input",
+                subtitleHo = "हो: $input",
+                subtitleMundari = "मुण्डारी: $input",
+                latencyMs = 420L
             )
         }
-
-        // 3. Check 20K Corpus match
-        val corpusMatch = SantaliCorpusRepository.findBestMatch(trimmed)
-        if (corpusMatch != null) {
-            return TranslationResult(
-                sourceHindi = inputHindi,
-                targetSantaliOlChiki = corpusMatch.santaliOlChiki,
-                targetSantaliDevanagari = corpusMatch.santaliDevanagari.ifBlank { corpusMatch.santaliOlChiki },
-                targetSantaliPhonetic = corpusMatch.santaliPhonetic,
-                subtitleHo = "हो: ${corpusMatch.santaliPhonetic}",
-                subtitleMundari = "मुण्डारी: ${corpusMatch.santaliPhonetic}",
-                latencyMs = 210L,
-                fromCorpus = true
-            )
-        }
-
-        // 4. Fallback synthesis
-        return TranslationResult(
-            sourceHindi = inputHindi,
-            targetSantaliOlChiki = "ᱚᱞ ᱪᱤᱠᱤ: $inputHindi",
-            targetSantaliDevanagari = "संथाली अनुवाद: $inputHindi",
-            targetSantaliPhonetic = "Santali anuvad: $inputHindi",
-            subtitleHo = "हो: $inputHindi",
-            subtitleMundari = "मुण्डारी: $inputHindi",
-            latencyMs = 420L
-        )
     }
 }

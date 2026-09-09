@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.sp
 import com.palashsaathi.app.data.FLNDictionary
 import com.palashsaathi.app.data.model.FLNCategory
 import com.palashsaathi.app.data.model.FlashcardItem
+import com.palashsaathi.app.data.model.LanguagePairMode
 import com.palashsaathi.app.data.model.ScriptType
 
 @Composable
 fun FlashcardsScreen(
     currentScript: ScriptType,
+    languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI,
     onSpeakSantaliAudio: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -48,7 +50,10 @@ fun FlashcardsScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "चित्र व शब्द फ्लैशकार्ड (Santali Visual Flashcards)",
+            text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI)
+                "Visual Flashcards (English to Santali)"
+            else
+                "चित्र व शब्द फ्लैशकार्ड (Santali Visual Flashcards)",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
@@ -118,6 +123,7 @@ fun FlashcardsScreen(
                 FlashcardCard(
                     item = item,
                     currentScript = currentScript,
+                    languageMode = languageMode,
                     onSpeak = { onSpeakSantaliAudio(item.santaliPhonetic, item.santaliDevanagari) }
                 )
             }
@@ -129,6 +135,7 @@ fun FlashcardsScreen(
 fun FlashcardCard(
     item: FlashcardItem,
     currentScript: ScriptType,
+    languageMode: LanguagePairMode = LanguagePairMode.HINDI_TO_SANTALI,
     onSpeak: () -> Unit
 ) {
     Card(
@@ -148,21 +155,32 @@ fun FlashcardCard(
             // Illustration Icon
             Icon(
                 imageVector = item.icon,
-                contentDescription = item.hindiWord,
+                contentDescription = item.getSourceWord(languageMode),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .size(48.dp)
                     .padding(vertical = 4.dp)
             )
 
-            // Hindi Word
+            // Primary Source Word based on Language Mode
             Text(
-                text = item.hindiWord,
+                text = item.getSourceWord(languageMode),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
+
+            // Secondary source language reference
+            val secondaryText = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) item.hindiWord else item.englishWord
+            if (secondaryText.isNotBlank()) {
+                Text(
+                    text = secondaryText,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
 
             if (item.category == FLNCategory.CORPUS_VOCAB) {
                 Spacer(modifier = Modifier.height(2.dp))

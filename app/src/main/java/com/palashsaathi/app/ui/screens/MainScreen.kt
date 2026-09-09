@@ -44,6 +44,7 @@ fun MainScreen(
 ) {
     var selectedTab by remember { mutableStateOf(AppTab.VOICE) }
     var currentScript by remember { mutableStateOf(ScriptType.OL_CHIKI) }
+    var currentLanguageMode by remember { mutableStateOf(com.palashsaathi.app.data.model.LanguagePairMode.HINDI_TO_SANTALI) }
     var showLandingSynopsis by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -96,7 +97,10 @@ fun MainScreen(
                                     }
                                 }
                                 Text(
-                                    text = "Santali (ᱥᱟᱱᱛᱟᱲᱤ) • 20K Corpus",
+                                    text = if (currentLanguageMode == com.palashsaathi.app.data.model.LanguagePairMode.HINDI_TO_SANTALI)
+                                        "हिन्दी → संथाली • 20K Corpus"
+                                    else
+                                        "English → Santali • 20K Corpus",
                                     fontSize = 11.sp,
                                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
                                 )
@@ -181,22 +185,28 @@ fun MainScreen(
             when (selectedTab) {
                 AppTab.VOICE -> VoiceTranslateScreen(
                     currentScript = currentScript,
+                    languageMode = currentLanguageMode,
                     onSpeakSantaliAudio = onSpeakSantaliAudio
                 )
                 AppTab.WORKSHEET -> WorksheetScreen(
-                    currentScript = currentScript
+                    currentScript = currentScript,
+                    languageMode = currentLanguageMode
                 )
                 AppTab.FLASHCARDS -> FlashcardsScreen(
                     currentScript = currentScript,
+                    languageMode = currentLanguageMode,
                     onSpeakSantaliAudio = onSpeakSantaliAudio
                 )
                 AppTab.PHRASEBOOK -> PhrasebookScreen(
                     currentScript = currentScript,
+                    languageMode = currentLanguageMode,
                     onSpeakSantaliAudio = onSpeakSantaliAudio
                 )
                 AppTab.SETTINGS -> SettingsScreen(
                     currentThemeMode = currentThemeMode,
-                    onThemeModeChanged = onThemeModeChanged
+                    onThemeModeChanged = onThemeModeChanged,
+                    currentLanguageMode = currentLanguageMode,
+                    onLanguageModeChanged = { currentLanguageMode = it }
                 )
             }
         }

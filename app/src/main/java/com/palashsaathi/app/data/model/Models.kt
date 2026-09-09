@@ -7,6 +7,16 @@ enum class ScriptType(val displayName: String) {
     DEVANAGARI("Devanagari (देवनागरी)")
 }
 
+enum class LanguagePairMode(
+    val titleHindi: String,
+    val titleEnglish: String,
+    val shortLabel: String,
+    val sourceLabel: String
+) {
+    HINDI_TO_SANTALI("हिन्दी से संथाली", "Hindi to Santali", "HI → SAT", "Hindi (हिन्दी)"),
+    ENGLISH_TO_SANTALI("अंग्रेज़ी से संथाली", "English to Santali", "EN → SAT", "English (अंग्रेज़ी)")
+}
+
 data class TranslationResult(
     val sourceHindi: String,
     val targetSantaliOlChiki: String,
@@ -16,8 +26,17 @@ data class TranslationResult(
     val subtitleMundari: String,
     val latencyMs: Long,
     val audioDurationMs: Long = 1800L,
-    val fromCorpus: Boolean = false
-)
+    val fromCorpus: Boolean = false,
+    val sourceEnglish: String = ""
+) {
+    fun getSource(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI && sourceEnglish.isNotBlank()) {
+            sourceEnglish
+        } else {
+            sourceHindi
+        }
+    }
+}
 
 enum class FLNGrade(val label: String) {
     GRADE_1("Grade 1 (कक्षा 1)"),
@@ -42,8 +61,17 @@ data class FlashcardItem(
     val hoSubtitle: String,
     val mundariSubtitle: String,
     val category: FLNCategory,
-    val icon: ImageVector
-)
+    val icon: ImageVector,
+    val englishWord: String = ""
+) {
+    fun getSourceWord(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI && englishWord.isNotBlank()) {
+            englishWord
+        } else {
+            hindiWord
+        }
+    }
+}
 
 data class WorksheetExercise(
     val id: String,
@@ -54,8 +82,26 @@ data class WorksheetExercise(
     val hintSantali: String,
     val icon: ImageVector,
     val options: List<String> = emptyList(),
-    val correctAnswer: String = ""
-)
+    val correctAnswer: String = "",
+    val questionEnglish: String = "",
+    val hintEnglish: String = ""
+) {
+    fun getQuestion(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI && questionEnglish.isNotBlank()) {
+            questionEnglish
+        } else {
+            questionHindi
+        }
+    }
+
+    fun getHint(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI && hintEnglish.isNotBlank()) {
+            hintEnglish
+        } else {
+            hintHindi
+        }
+    }
+}
 
 data class GeneratedWorksheet(
     val id: String,
@@ -65,8 +111,17 @@ data class GeneratedWorksheet(
     val grade: FLNGrade,
     val category: FLNCategory,
     val exercises: List<WorksheetExercise>,
-    val generatedTimestamp: Long = System.currentTimeMillis()
-)
+    val generatedTimestamp: Long = System.currentTimeMillis(),
+    val titleEnglish: String = ""
+) {
+    fun getTitle(mode: LanguagePairMode): String {
+        return if (mode == LanguagePairMode.ENGLISH_TO_SANTALI && titleEnglish.isNotBlank()) {
+            titleEnglish
+        } else {
+            titleHindi
+        }
+    }
+}
 
 data class CorpusSentence(
     val id: Int,
