@@ -160,10 +160,23 @@ PalashSaathi/
 
 ---
 
+## Authors & Contributors (SIH 2026)
+
+| Contributor | GitHub Profile |
+| :--- | :--- |
+| **Sajal** | [@akasajal](https://github.com/akasajal) |
+| **Md. Zaid** | [@mohd-zaidb](https://github.com/mohd-zaidb) |
+| **Darshan** | [@darshann0319](https://github.com/darshann0319) |
+| **Sangeeta** | [@sangeeta006](https://github.com/sangeeta006) |
+| **Safia** | [@safia052](https://github.com/safia052) |
+| **Md. Mustafa** | [@mmustafair](https://github.com/mmustafair) |
+
+---
+
 ## License & Intellectual Property
 
 **Proprietary and Confidential - Smart India Hackathon (SIH) 2026**  
-Copyright © 2026 PalashSaathi Project Contributors. All Rights Reserved.
+Copyright © 2026 [Sajal](https://github.com/akasajal), [Md. Zaid](https://github.com/mohd-zaidb), [Darshan](https://github.com/darshann0319), [Sangeeta](https://github.com/sangeeta006), [Safia](https://github.com/safia052), [Md. Mustafa](https://github.com/mmustafair). All Rights Reserved.
 
 This software, its source code, linguistic datasets, custom transliteration engines, and user interfaces are proprietary assets created exclusively for evaluation, assessment, and demonstration in the Smart India Hackathon (SIH) 2026.
 
