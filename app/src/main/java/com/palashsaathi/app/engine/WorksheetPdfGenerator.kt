@@ -91,7 +91,7 @@ object WorksheetPdfGenerator {
             canvas.drawRect(40f, boxTop, 555f, boxTop + boxHeight, paintBox)
 
             // Number and Question in Hindi
-            canvas.drawText("$num. ${exercise.questionHindi}  [${exercise.illustrationEmoji}]", 50f, y + 5f, paintBold)
+            canvas.drawText("$num. ${exercise.questionHindi}", 50f, y + 5f, paintBold)
 
             // Question in Ho (Devanagari + Warang Citi representation)
             canvas.drawText("   हो (Ho): ${exercise.questionHoDevanagari}  •  ${exercise.questionHoWarangCiti}", 50f, y + 22f, paintBody)

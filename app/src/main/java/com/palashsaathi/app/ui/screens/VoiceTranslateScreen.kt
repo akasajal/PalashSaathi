@@ -87,12 +87,21 @@ fun VoiceTranslateScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                Text(
-                    text = "⚡ Latency: ${currentResult.latencyMs} ms (< 3.0s)",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = PalashOrangeDark,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Bolt,
+                        contentDescription = "Latency",
+                        tint = PalashOrangeDark,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Latency: ${currentResult.latencyMs} ms (< 3.0s)",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = PalashOrangeDark,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
 

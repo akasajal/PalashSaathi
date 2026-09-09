@@ -1,5 +1,7 @@
 package com.palashsaathi.app.data.model
 
+import androidx.compose.ui.graphics.vector.ImageVector
+
 enum class ScriptType(val displayName: String) {
     WARANG_CITI("Warang Citi (𑣓𑣉𑣎𑣉𑣜)"),
     DEVANAGARI("Devanagari (देवनागरी)")
@@ -37,7 +39,7 @@ data class FlashcardItem(
     val santhaliSubtitle: String,
     val mundariSubtitle: String,
     val category: FLNCategory,
-    val emojiOrIcon: String
+    val icon: ImageVector
 )
 
 data class WorksheetExercise(
@@ -47,7 +49,7 @@ data class WorksheetExercise(
     val questionHoDevanagari: String,
     val hintHindi: String,
     val hintHo: String,
-    val illustrationEmoji: String,
+    val icon: ImageVector,
     val options: List<String> = emptyList(),
     val correctAnswer: String = ""
 )

@@ -44,14 +44,14 @@ fun WorksheetScreen(
             category = selectedCategory,
             exercises = if (selectedCategory == FLNCategory.NUMERACY) {
                 listOf(
-                    WorksheetExercise("ex1", "गिनकर सही संख्या पर गोला लगाओ", "𑣚𑣆𑣊𑣁𑣜 𑣕𑣆 𑣞𑣂𑣚𑣁𑣎 𑣚𑣆", "लेखा केते जोड़ावपे", "सेब को गिनें", "मित्, बारिया, आपिया...", "🍎🍎🍎", listOf("1", "2", "3"), "3"),
-                    WorksheetExercise("ex2", "कितने तारे हैं? संख्या लिखो", "𑣕𑣂𑣓𑣁𑣊 𑣂𑣚𑣂𑣊 𑣞𑣆𑣓𑣁𑣋? 𑣉𑣚𑣚𑣆", "तिनाः इपिल मेनाः? ओलपे", "आकाश के तारे", "इपिल लेखापे", "⭐ ⭐ ⭐ ⭐", listOf("2", "4", "5"), "4"),
-                    WorksheetExercise("ex3", "एक हाथ में कितनी उंगलियाँ होती हैं?", "𑣞𑣂𑣕𑣂 𑣕𑣂 𑣜𑣆 𑣕𑣂𑣓𑣁𑣊 𑣋𑣁𑣓𑣋𑣁?", "मित् ती रे तिनाः गांगा?", "हाथ की उंगलियाँ", "मोड़ेया (पाँच)", "✋", listOf("4", "5", "6"), "5")
+                    WorksheetExercise("ex1", "गिनकर सही संख्या पर गोला लगाओ", "𑣚𑣆𑣊𑣁𑣜 𑣕𑣆 𑣞𑣂𑣚𑣁𑣎 𑣚𑣆", "लेखा केते जोड़ावपे", "गिनती का अभ्यास", "मित्, बारिया, आपिया...", Icons.Default.Filter3, listOf("1", "2", "3"), "3"),
+                    WorksheetExercise("ex2", "सही संख्या की पहचान करो और लिखो", "𑣕𑣂𑣓𑣁𑣊 𑣂𑣚𑣂𑣊 𑣞𑣆𑣓𑣁𑣋? 𑣉𑣚𑣚𑣆", "तिनाः इपिल मेनाः? ओलपे", "संख्या पहचान", "इपिल लेखापे", Icons.Default.Filter4, listOf("2", "4", "5"), "4"),
+                    WorksheetExercise("ex3", "एक हाथ में कितनी उंगलियाँ होती हैं?", "𑣞𑣂𑣕𑣂 𑣕𑣂 𑣜𑣆 𑣕𑣂𑣓𑣁𑣊 𑣋𑣁𑣓𑣋𑣁?", "मित् ती रे तिनाः गांगा?", "उंगलियों की गिनती", "मोड़ेया (पाँच)", Icons.Default.Filter5, listOf("4", "5", "6"), "5")
                 )
             } else {
                 listOf(
-                    WorksheetExercise("ex4", "'पानी' को हो भाषा में क्या कहते हैं?", "𑣓𑣁𑣁𑣋𑣂 𑣏𑣂𑣓𑣁𑣋 𑣞𑣆𑣓𑣁𑣋?", "'दाः' को क्या कहते हैं?", "पीने का पानी", "दाः (Dah)", "💧", listOf("दारू", "दाः", "सिंगी"), "दाः"),
-                    WorksheetExercise("ex5", "'गाय' के चित्र का सही शब्द चुनो", "𑣃𑣜𑣂 𑣁𑣕𑣆 𑣏𑣂𑣕𑣂 𑣞𑣂𑣚𑣁𑣎", "उरिः के चित्र से मिलाओ", "घरेलू पशु", "उरिः (Urih)", "🐄", listOf("चेँड़े", "उरिः", "कुल"), "उरिः")
+                    WorksheetExercise("ex4", "'पानी' को हो भाषा में क्या कहते हैं?", "𑣓𑣁𑣁𑣋𑣂 𑣏𑣂𑣓𑣁𑣋 𑣞𑣆𑣓𑣁𑣋?", "'दाः' को क्या कहते हैं?", "पीने का पानी", "दाः (Dah)", Icons.Default.WaterDrop, listOf("दारू", "दाः", "सिंगी"), "दाः"),
+                    WorksheetExercise("ex5", "'गाय' के लिए सही शब्द चुनो", "𑣃𑣜𑣂 𑣁𑣕𑣆 𑣏𑣂𑣕𑣂 𑣞𑣂𑣚𑣁𑣎", "उरिः के चित्र से मिलाओ", "घरेलू पशु", "उरिः (Urih)", Icons.Default.Pets, listOf("चेँड़े", "उरिः", "कुल"), "उरिः")
                 )
             }
         )
@@ -169,12 +169,20 @@ fun WorksheetScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp),
+                            .padding(vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "${i + 1}. ", fontWeight = FontWeight.Bold)
+                        Icon(
+                            imageVector = ex.icon,
+                            contentDescription = null,
+                            tint = ForestGreen,
+                            modifier = Modifier
+                                .size(22.dp)
+                                .padding(end = 6.dp)
+                        )
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(text = "${ex.questionHindi} ${ex.illustrationEmoji}", fontWeight = FontWeight.Medium)
+                            Text(text = ex.questionHindi, fontWeight = FontWeight.Medium)
                             Text(
                                 text = "हो: ${if (currentScript == ScriptType.WARANG_CITI) ex.questionHoWarangCiti else ex.questionHoDevanagari}",
                                 fontSize = 12.sp,

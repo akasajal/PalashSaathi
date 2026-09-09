@@ -122,12 +122,14 @@ fun FlashcardCard(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Illustration Icon / Emoji
-            Text(
-                text = item.emojiOrIcon,
-                fontSize = 44.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(vertical = 4.dp)
+            // Illustration Icon
+            Icon(
+                imageVector = item.icon,
+                contentDescription = item.hindiWord,
+                tint = PalashOrange,
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(vertical = 4.dp)
             )
 
             // Hindi Word

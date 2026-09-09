@@ -1,5 +1,7 @@
 package com.palashsaathi.app.data
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import com.palashsaathi.app.data.model.FLNCategory
 import com.palashsaathi.app.data.model.FlashcardItem
 import com.palashsaathi.app.data.model.TranslationResult
@@ -109,7 +111,7 @@ object FLNDictionary {
             santhaliSubtitle = "मिद् (Mid)",
             mundariSubtitle = "मियाँद (Miyad)",
             category = FLNCategory.NUMERACY,
-            emojiOrIcon = "🍎"
+            icon = Icons.Default.Filter1
         ),
         FlashcardItem(
             id = "num_2",
@@ -120,7 +122,7 @@ object FLNDictionary {
             santhaliSubtitle = "बार (Bar)",
             mundariSubtitle = "बारिया (Bariya)",
             category = FLNCategory.NUMERACY,
-            emojiOrIcon = "🍏🍏"
+            icon = Icons.Default.Filter2
         ),
         FlashcardItem(
             id = "num_3",
@@ -131,7 +133,7 @@ object FLNDictionary {
             santhaliSubtitle = "पे (Pe)",
             mundariSubtitle = "आपिया (Apiya)",
             category = FLNCategory.NUMERACY,
-            emojiOrIcon = "⭐"
+            icon = Icons.Default.Filter3
         ),
         FlashcardItem(
             id = "num_4",
@@ -142,7 +144,7 @@ object FLNDictionary {
             santhaliSubtitle = "पोन (Pon)",
             mundariSubtitle = "उपूनिया (Upuniya)",
             category = FLNCategory.NUMERACY,
-            emojiOrIcon = "🔺"
+            icon = Icons.Default.Filter4
         ),
         FlashcardItem(
             id = "num_5",
@@ -153,7 +155,7 @@ object FLNDictionary {
             santhaliSubtitle = "मोँड़े (Monre)",
             mundariSubtitle = "मोड़ेया (Modeya)",
             category = FLNCategory.NUMERACY,
-            emojiOrIcon = "✋"
+            icon = Icons.Default.Filter5
         ),
         FlashcardItem(
             id = "lit_water",
@@ -164,7 +166,7 @@ object FLNDictionary {
             santhaliSubtitle = "दाः (Dak)",
             mundariSubtitle = "दाः (Dah)",
             category = FLNCategory.LITERACY,
-            emojiOrIcon = "💧"
+            icon = Icons.Default.WaterDrop
         ),
         FlashcardItem(
             id = "lit_tree",
@@ -175,7 +177,7 @@ object FLNDictionary {
             santhaliSubtitle = "दारे (Dare)",
             mundariSubtitle = "दारू (Daru)",
             category = FLNCategory.LITERACY,
-            emojiOrIcon = "🌳"
+            icon = Icons.Default.Park
         ),
         FlashcardItem(
             id = "lit_sun",
@@ -186,7 +188,7 @@ object FLNDictionary {
             santhaliSubtitle = "सेंगेल/चांदो (Singi/Chando)",
             mundariSubtitle = "सिंगी (Singi)",
             category = FLNCategory.LITERACY,
-            emojiOrIcon = "☀️"
+            icon = Icons.Default.WbSunny
         ),
         FlashcardItem(
             id = "lit_cow",
@@ -197,7 +199,7 @@ object FLNDictionary {
             santhaliSubtitle = "गाई (Gai)",
             mundariSubtitle = "उरिः (Urih)",
             category = FLNCategory.LITERACY,
-            emojiOrIcon = "🐄"
+            icon = Icons.Default.Pets
         ),
         FlashcardItem(
             id = "lit_bird",
@@ -208,7 +210,7 @@ object FLNDictionary {
             santhaliSubtitle = "चेँड़े (Chenre)",
             mundariSubtitle = "चेँड़े (Chende)",
             category = FLNCategory.LITERACY,
-            emojiOrIcon = "🐦"
+            icon = Icons.Default.FlutterDash
         )
     )
 
