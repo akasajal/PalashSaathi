@@ -1,11 +1,9 @@
 package com.palashsaathi.app.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,11 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.palashsaathi.app.ui.theme.AppThemeMode
 
 @Composable
@@ -42,7 +38,7 @@ fun SettingsScreen(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Customize display appearance, contrast, and application preferences.",
+            text = "Customize display appearance and application preferences.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -119,101 +115,30 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Color Palette & Contrast Breakdown Section
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.ColorLens,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(22.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "रंग पैलेट और स्पष्टता (Color Scheme & Contrast)",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = CardDefaults.outlinedCardBorder().copy(
-                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline)
-            ),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "High-accessibility 3-color design scheme:",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Coral (Saffronish) Row
-                ColorSwatchRow(
-                    color = MaterialTheme.colorScheme.primary,
-                    colorName = "Coral Saffron (केसरिया-मूंगा)",
-                    role = "Primary Brand & Main Actions",
-                    contrastNote = "High contrast on white/dark surfaces (WCAG AAA compliant)"
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Greenish Row
-                ColorSwatchRow(
-                    color = MaterialTheme.colorScheme.secondary,
-                    colorName = "Forest Green (हरा/वन)",
-                    role = "Secondary Status, Offline Indicators & Exports",
-                    contrastNote = "Calibrated foliage tone (> 6:1 contrast ratio)"
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Yellowish Row
-                ColorSwatchRow(
-                    color = MaterialTheme.colorScheme.tertiary,
-                    colorName = "Golden Amber (पीताभ/स्वर्ण)",
-                    role = "Tertiary Highlights & Subtitle Accents",
-                    contrastNote = "Warm amber glow with deep readability (> 4.8:1)"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // System & Language Info Card
+        // About App Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             shape = RoundedCornerShape(14.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "PalashSaathi • Version 1.0.0",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "• Primary Voice & Pedagogy: Ho (Warang Citi & Devanagari)\n• Live Subtitles: Santhali & Mundari\n• Edge Inference: 100% Offline (< 3.0s Latency Guarantee)",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 18.sp
+                    text = "PalashSaathi v1.0",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -276,48 +201,5 @@ fun ThemeOptionRow(
                 unselectedColor = MaterialTheme.colorScheme.outline
             )
         )
-    }
-}
-
-@Composable
-fun ColorSwatchRow(
-    color: Color,
-    colorName: String,
-    role: String,
-    contrastNote: String
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(color)
-                .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-        )
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = colorName,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = role,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text = contrastNote,
-                style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Medium
-            )
-        }
     }
 }
