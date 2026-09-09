@@ -51,62 +51,6 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Translation Mode Section Header
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.Translate,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(22.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "अनुवाद भाषा मोड (Translation Mode)",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Language Pair Options Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = CardDefaults.outlinedCardBorder().copy(
-                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline)
-            ),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(8.dp)) {
-                SettingsOptionRow(
-                    titleHindi = "हिन्दी से संथाली",
-                    titleEnglish = "Hindi to Santali",
-                    description = "Hindi speech & prompts translate into Santali",
-                    icon = Icons.Default.Translate,
-                    isSelected = currentLanguageMode == LanguagePairMode.HINDI_TO_SANTALI,
-                    onClick = { onLanguageModeChanged(LanguagePairMode.HINDI_TO_SANTALI) }
-                )
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-
-                SettingsOptionRow(
-                    titleHindi = "अंग्रेज़ी से संथाली",
-                    titleEnglish = "English to Santali",
-                    description = "English speech & prompts match directly with 20K corpus",
-                    icon = Icons.Default.Language,
-                    isSelected = currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI,
-                    onClick = { onLanguageModeChanged(LanguagePairMode.ENGLISH_TO_SANTALI) }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         // Appearance & Theme Section Header
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -171,6 +115,62 @@ fun SettingsScreen(
                     icon = Icons.Default.DarkMode,
                     isSelected = currentThemeMode == AppThemeMode.DARK,
                     onClick = { onThemeModeChanged(AppThemeMode.DARK) }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Translation Mode Section Header
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Default.Translate,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(22.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "अनुवाद भाषा मोड (Translation Mode)",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Language Pair Options Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = CardDefaults.outlinedCardBorder().copy(
+                brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline)
+            ),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                SettingsOptionRow(
+                    titleHindi = "हिन्दी से संथाली",
+                    titleEnglish = "Hindi to Santali",
+                    description = "Hindi speech & prompts translate into Santali",
+                    icon = Icons.Default.Translate,
+                    isSelected = currentLanguageMode == LanguagePairMode.HINDI_TO_SANTALI,
+                    onClick = { onLanguageModeChanged(LanguagePairMode.HINDI_TO_SANTALI) }
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                SettingsOptionRow(
+                    titleHindi = "अंग्रेज़ी से संथाली",
+                    titleEnglish = "English to Santali",
+                    description = "English speech & prompts match directly with 20K corpus",
+                    icon = Icons.Default.Language,
+                    isSelected = currentLanguageMode == LanguagePairMode.ENGLISH_TO_SANTALI,
+                    onClick = { onLanguageModeChanged(LanguagePairMode.ENGLISH_TO_SANTALI) }
                 )
             }
         }
