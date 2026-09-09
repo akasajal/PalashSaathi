@@ -142,3 +142,12 @@ data class CorpusSentence(
     val santaliDevanagari: String = "",
     val santaliPhonetic: String = ""
 )
+
+data class ClassroomChatMessage(
+    val id: String = java.util.UUID.randomUUID().toString(),
+    val sourceText: String,
+    val sourceLanguage: LanguagePairMode,
+    val translation: TranslationResult,
+    val timestamp: Long = System.currentTimeMillis()
+)
+

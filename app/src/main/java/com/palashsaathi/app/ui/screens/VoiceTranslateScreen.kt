@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,11 @@ import com.palashsaathi.app.engine.DynamicTranslationEngine
 import com.palashsaathi.app.engine.VoiceRecognitionEngine
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+enum class VoiceViewMode {
+    CHAT, // One-Way Classroom Broadcast Feed (Teacher speaks Hindi/English -> Student receives Tribal Santali)
+    CARD  // Traditional single-card flashcard translator
+}
 
 @Composable
 fun VoiceTranslateScreen(
@@ -67,6 +74,7 @@ fun VoiceTranslateScreen(
     var currentResult by remember(languageMode) { mutableStateOf(FLNDictionary.CLASSROOM_ENTRIES[0]) }
     var showDialects by remember { mutableStateOf(false) }
     var fallbackToAcousticForHindi by remember { mutableStateOf(false) }
+    var viewMode by remember { mutableStateOf(VoiceViewMode.CHAT) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -202,19 +210,46 @@ fun VoiceTranslateScreen(
     // Live acoustic wave scale computed directly from real-time microphone decibels
     val liveMicScale = 1f + (liveAmplitude * 0.45f)
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // 1. Teacher Speech Bubble (Conversational Card with Avatar & Live Edit/Type field)
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    Column(modifier = modifier.fillMaxSize()) {
+        // Mode Selector: Chat Mode vs Card Mode
+        VoiceModeSelector(
+            viewMode = viewMode,
+            onModeSelected = { selected: VoiceViewMode ->
+                if (isListening || audioRecordEngine.isRecording) {
+                    voiceRecognitionEngine.stopListening()
+                    audioRecordEngine.stopRecording(cancel = true)
+                    isListening = false
+                    liveAmplitude = 0f
+                }
+                viewMode = selected
+            },
+            languageMode = languageMode
+        )
+
+        when (viewMode) {
+            VoiceViewMode.CHAT -> {
+                ClassroomChatScreen(
+                    currentScript = currentScript,
+                    languageMode = languageMode,
+                    onSpeakSantaliAudio = onSpeakSantaliAudio,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            VoiceViewMode.CARD -> {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // 1. Teacher Speech Bubble (Conversational Card with Avatar & Live Edit/Type field)
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -793,3 +828,93 @@ fun VoiceTranslateScreen(
         }
     }
 }
+}
+}
+}
+
+@Composable
+fun VoiceModeSelector(
+    viewMode: VoiceViewMode,
+    onModeSelected: (VoiceViewMode) -> Unit,
+    languageMode: LanguagePairMode,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Row(
+                    modifier = Modifier.padding(3.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Chat Mode Pill
+                    val isChat = viewMode == VoiceViewMode.CHAT
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = if (isChat) MaterialTheme.colorScheme.primary else Color.Transparent,
+                        modifier = Modifier.clickable { onModeSelected(VoiceViewMode.CHAT) }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Forum,
+                                contentDescription = null,
+                                tint = if (isChat) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "One-Way Chat" else "एकतरफ़ा चैट",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (isChat) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isChat) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    // Card Mode Pill
+                    val isCard = viewMode == VoiceViewMode.CARD
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = if (isCard) MaterialTheme.colorScheme.primary else Color.Transparent,
+                        modifier = Modifier.clickable { onModeSelected(VoiceViewMode.CARD) }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ViewAgenda,
+                                contentDescription = null,
+                                tint = if (isCard) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = if (languageMode == LanguagePairMode.ENGLISH_TO_SANTALI) "Card Mode" else "कार्ड मोड",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (isCard) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isCard) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
