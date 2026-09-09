@@ -34,12 +34,12 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(AppTab.VOICE) }
-    var currentScript by remember { mutableStateOf(ScriptType.WARANG_CITI) }
+    var currentScript by remember { mutableStateOf(ScriptType.OL_CHIKI) }
     val coroutineScope = rememberCoroutineScope()
 
-    val onSpeakHoAudio: (String, String) -> Unit = { phonetic, devanagari ->
+    val onSpeakSantaliAudio: (String, String) -> Unit = { phonetic, devanagari ->
         coroutineScope.launch {
-            audioEngine.speakHo(phonetic, devanagari)
+            audioEngine.speakSantali(phonetic, devanagari)
         }
     }
 
@@ -70,20 +70,20 @@ fun MainScreen(
                             }
                         }
                         Text(
-                            text = "AI Vernacular Pedagogy • Ho (हो)",
+                            text = "AI Vernacular Pedagogy • Santali (ᱥᱟᱱᱛᱟᱲᱤ)",
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f)
                         )
                     }
                 },
                 actions = {
-                    // Script Switcher Button (Warang Citi <-> Devanagari)
+                    // Script Switcher Button (Ol Chiki <-> Devanagari)
                     OutlinedButton(
                         onClick = {
-                            currentScript = if (currentScript == ScriptType.WARANG_CITI) {
+                            currentScript = if (currentScript == ScriptType.OL_CHIKI) {
                                 ScriptType.DEVANAGARI
                             } else {
-                                ScriptType.WARANG_CITI
+                                ScriptType.OL_CHIKI
                             }
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
@@ -103,7 +103,7 @@ fun MainScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = if (currentScript == ScriptType.WARANG_CITI) "𑣓𑣉𑣎𑣉𑣜" else "देवनागरी",
+                            text = if (currentScript == ScriptType.OL_CHIKI) "ᱚᱞ ᱪᱤᱠᱤ" else "देवनागरी",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary
@@ -154,18 +154,18 @@ fun MainScreen(
             when (selectedTab) {
                 AppTab.VOICE -> VoiceTranslateScreen(
                     currentScript = currentScript,
-                    onSpeakHoAudio = onSpeakHoAudio
+                    onSpeakSantaliAudio = onSpeakSantaliAudio
                 )
                 AppTab.WORKSHEET -> WorksheetScreen(
                     currentScript = currentScript
                 )
                 AppTab.FLASHCARDS -> FlashcardsScreen(
                     currentScript = currentScript,
-                    onSpeakHoAudio = onSpeakHoAudio
+                    onSpeakSantaliAudio = onSpeakSantaliAudio
                 )
                 AppTab.PHRASEBOOK -> PhrasebookScreen(
                     currentScript = currentScript,
-                    onSpeakHoAudio = onSpeakHoAudio
+                    onSpeakSantaliAudio = onSpeakSantaliAudio
                 )
                 AppTab.SETTINGS -> SettingsScreen(
                     currentThemeMode = currentThemeMode,

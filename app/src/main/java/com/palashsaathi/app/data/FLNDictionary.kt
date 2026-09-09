@@ -11,91 +11,91 @@ object FLNDictionary {
     val CLASSROOM_ENTRIES = listOf(
         TranslationResult(
             sourceHindi = "किताब खोलो",
-            targetHoWarangCiti = "𑣚𑣉𑣕𑣂 𑣃𑣋𑣁𑣑𑣚𑣆",
-            targetHoDevanagari = "पोथी उघाड़पे",
-            targetHoPhonetic = "Pothi ughadpe",
-            subtitleSanthali = "पुथी झिजमे (Puthi jhime)",
-            subtitleMundari = "पुथी ओड़ोङपे (Puthi oṛongpe)",
+            targetSantaliOlChiki = "ᱯᱩᱛᱷᱤ ᱡᱷᱤᱡᱽᱢᱮ",
+            targetSantaliDevanagari = "पुथी झिजमे",
+            targetSantaliPhonetic = "Puthi jhijme",
+            subtitleHo = "पोथी उघाड़पे (Pothi ughadpe)",
+            subtitleMundari = "पुथी ओड़ोङपे (Puthi orongpe)",
             latencyMs = 280L
         ),
         TranslationResult(
             sourceHindi = "ध्यान से सुनो",
-            targetHoWarangCiti = "𑣣𑣁𑣊𑣂 𑣕𑣆 𑣁𑣁𑣅𑣃𑣞𑣚𑣆",
-            targetHoDevanagari = "सांगी ते आयूमपे",
-            targetHoPhonetic = "Sangi te aayumpe",
-            subtitleSanthali = "मोन देते आंजोमपे (Mon dete anjompe)",
+            targetSantaliOlChiki = "ᱢᱚᱱ ᱮᱢ ᱠᱟᱛᱮ ᱟᱧᱡᱚᱢᱯᱮ",
+            targetSantaliDevanagari = "मोन देते आंजोमपे",
+            targetSantaliPhonetic = "Mon dete anjompe",
+            subtitleHo = "सांगी ते आयूमपे (Sangi te aayumpe)",
             subtitleMundari = "धियान ते आयूमपे (Dhiyan te aayumpe)",
             latencyMs = 310L
         ),
         TranslationResult(
             sourceHindi = "शांत रहो",
-            targetHoWarangCiti = "𑣚𑣂𑣜 𑣕𑣆 𑣕𑣁𑣆𑣓𑣚𑣆",
-            targetHoDevanagari = "थिर ते ताईनपे",
-            targetHoPhonetic = "Thir te tainpe",
-            subtitleSanthali = "थिर कोगोमे (Thir kogome)",
+            targetSantaliOlChiki = "ᱛᱷᱤᱨ ᱠᱚᱜᱳᱢᱮ",
+            targetSantaliDevanagari = "थिर कोगोमे",
+            targetSantaliPhonetic = "Thir kogome",
+            subtitleHo = "थिर ते ताईनपे (Thir te tainpe)",
             subtitleMundari = "थिर गे ताईनपे (Thir ge tainpe)",
             latencyMs = 240L
         ),
         TranslationResult(
             sourceHindi = "यहाँ आओ",
-            targetHoWarangCiti = "𑣓𑣆𑣕𑣆 𑣁𑣃𑣜𑣂𑣚𑣆",
-            targetHoDevanagari = "नेते हूरुपे",
-            targetHoPhonetic = "Nete hurupe",
-            subtitleSanthali = "नोंडे हेजमे (Nonde hejme)",
+            targetSantaliOlChiki = "ᱱᱚᱸᱰᱮ ᱦᱤᱡᱩᱜᱽᱢᱮ",
+            targetSantaliDevanagari = "नोंडे हेजमे",
+            targetSantaliPhonetic = "Nonde hejme",
+            subtitleHo = "नेते हूरुपे (Nete hurupe)",
             subtitleMundari = "नेते हिजूःपे (Nete hiju:pe)",
             latencyMs = 210L
         ),
         TranslationResult(
             sourceHindi = "बैठ जाओ",
-            targetHoWarangCiti = "𑣃𑣞𑣃𑣊 𑣚𑣆",
-            targetHoDevanagari = "दुबपे",
-            targetHoPhonetic = "Dubpe",
-            subtitleSanthali = "दुड़ुपमे (Durupme)",
+            targetSantaliOlChiki = "ᱫᱩᱲᱩᱵᱽᱢᱮ",
+            targetSantaliDevanagari = "दुड़ुपमे",
+            targetSantaliPhonetic = "Durupme",
+            subtitleHo = "दुबपे (Dubpe)",
             subtitleMundari = "दुबपे (Dubpe)",
             latencyMs = 190L
         ),
         TranslationResult(
             sourceHindi = "खड़े हो जाओ",
-            targetHoWarangCiti = "𑣕𑣂𑣊𑣃 𑣚𑣆",
-            targetHoDevanagari = "तिंगुपे",
-            targetHoPhonetic = "Tingupe",
-            subtitleSanthali = "तिंगुनमे (Tingunme)",
+            targetSantaliOlChiki = "ᱛᱤᱸᱜᱩᱱᱢᱮ",
+            targetSantaliDevanagari = "तिंगुनमे",
+            targetSantaliPhonetic = "Tingunme",
+            subtitleHo = "तिंगुपे (Tingupe)",
             subtitleMundari = "तिंगुपे (Tingupe)",
             latencyMs = 220L
         ),
         TranslationResult(
             sourceHindi = "ब्लैकबोर्ड पर देखो",
-            targetHoWarangCiti = "𑣒𑣁𑣒𑣁 𑣜𑣆 𑣓𑣆𑣚𑣚𑣆",
-            targetHoDevanagari = "पाटा रे नेलपे",
-            targetHoPhonetic = "Pata re nelpe",
-            subtitleSanthali = "बोर्ड रे ञेलमे (Board re nyelme)",
+            targetSantaliOlChiki = "ᱵᱳᱨᱰ ᱨᱮ ᱧᱮᱞᱢᱮ",
+            targetSantaliDevanagari = "बोर्ड रे ञेलमे",
+            targetSantaliPhonetic = "Board re nyelme",
+            subtitleHo = "पाटा रे नेलपे (Pata re nelpe)",
             subtitleMundari = "पाटा रे नेलपे (Pata re nelpe)",
             latencyMs = 320L
         ),
         TranslationResult(
             sourceHindi = "शाबाश बहुत अच्छा",
-            targetHoWarangCiti = "𑣣𑣃𑣋𑣂 𑣃𑣕𑣁𑣜",
-            targetHoDevanagari = "बुगी उतार",
-            targetHoPhonetic = "Bugi utar",
-            subtitleSanthali = "आडी मोज (Adi moj)",
+            targetSantaliOlChiki = "ᱟᱹᱰᱤ ᱢᱚᱡᱽ",
+            targetSantaliDevanagari = "आडी मोज",
+            targetSantaliPhonetic = "Adi moj",
+            subtitleHo = "बुगी उतार (Bugi utar)",
             subtitleMundari = "बुगी उतार (Bugi utar)",
             latencyMs = 230L
         ),
         TranslationResult(
             sourceHindi = "अपना नाम बताओ",
-            targetHoWarangCiti = "𑣁𑣞𑣁 𑣓𑣃𑣕𑣃𑣞 𑣆𑣕𑣃𑣓𑣞𑣆",
-            targetHoDevanagari = "अमाः नुतुम काजीमे",
-            targetHoPhonetic = "Amah nutum kajime",
-            subtitleSanthali = "आमअः ञुतुम लयमे (Amah nyutum layme)",
+            targetSantaliOlChiki = "ᱟᱢᱟᱜ ᱧᱩᱛᱩᱢ ᱞᱟᱹᱭᱢᱮ",
+            targetSantaliDevanagari = "आमअः ञुतुम लयमे",
+            targetSantaliPhonetic = "Amah nyutum layme",
+            subtitleHo = "अमाः नुतुम काजीमे (Amah nutum kajime)",
             subtitleMundari = "अमाः नुतुम काजीमे (Amah nutum kajime)",
             latencyMs = 350L
         ),
         TranslationResult(
             sourceHindi = "कॉपी में लिखो",
-            targetHoWarangCiti = "𑣂𑣕𑣂𑣊 𑣜𑣆 𑣉𑣚𑣚𑣆",
-            targetHoDevanagari = "खाता रे ओलपे",
-            targetHoPhonetic = "Khata re olpe",
-            subtitleSanthali = "खाता रे ओलमे (Khata re olme)",
+            targetSantaliOlChiki = "ᱠᱷᱟᱛᱟ ᱨᱮ ᱚᱞᱢᱮ",
+            targetSantaliDevanagari = "खाता रे ओलमे",
+            targetSantaliPhonetic = "Khata re olme",
+            subtitleHo = "खाता रे ओलपे (Khata re olpe)",
             subtitleMundari = "खाता रे ओलपे (Khata re olpe)",
             latencyMs = 270L
         )
@@ -105,10 +105,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_1",
             hindiWord = "एक (1)",
-            hoWarangCiti = "𑣡 (𑣞𑣂𑣕𑣂)",
-            hoDevanagari = "मित् (१)",
-            hoPhonetic = "Mit",
-            santhaliSubtitle = "मिद् (Mid)",
+            santaliOlChiki = "᱑ (ᱢᱤᱫ)",
+            santaliDevanagari = "मिद् (१)",
+            santaliPhonetic = "Mid",
+            hoSubtitle = "मित् (Mit)",
             mundariSubtitle = "मियाँद (Miyad)",
             category = FLNCategory.NUMERACY,
             icon = Icons.Default.Filter1
@@ -116,10 +116,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_2",
             hindiWord = "दो (2)",
-            hoWarangCiti = "𑣢 (𑣎𑣁𑣜𑣂𑣕𑣂)",
-            hoDevanagari = "बारिया (२)",
-            hoPhonetic = "Bariya",
-            santhaliSubtitle = "बार (Bar)",
+            santaliOlChiki = "᱒ (ᱵᱟᱨ)",
+            santaliDevanagari = "बार (२)",
+            santaliPhonetic = "Bar",
+            hoSubtitle = "बारिया (Bariya)",
             mundariSubtitle = "बारिया (Bariya)",
             category = FLNCategory.NUMERACY,
             icon = Icons.Default.Filter2
@@ -127,10 +127,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_3",
             hindiWord = "तीन (3)",
-            hoWarangCiti = "𑣣 (𑣁𑣚𑣂𑣕𑣂)",
-            hoDevanagari = "आपिया (३)",
-            hoPhonetic = "Apiya",
-            santhaliSubtitle = "पे (Pe)",
+            santaliOlChiki = "᱓ (ᱯᱮ)",
+            santaliDevanagari = "पे (३)",
+            santaliPhonetic = "Pe",
+            hoSubtitle = "आपिया (Apiya)",
             mundariSubtitle = "आपिया (Apiya)",
             category = FLNCategory.NUMERACY,
             icon = Icons.Default.Filter3
@@ -138,10 +138,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_4",
             hindiWord = "चार (4)",
-            hoWarangCiti = "𑣤 (𑣃𑣚𑣂𑣕𑣂)",
-            hoDevanagari = "उपूनिया (४)",
-            hoPhonetic = "Upuniya",
-            santhaliSubtitle = "पोन (Pon)",
+            santaliOlChiki = "᱔ (ᱯᱳᱱ)",
+            santaliDevanagari = "पोन (४)",
+            santaliPhonetic = "Pon",
+            hoSubtitle = "उपूनिया (Upuniya)",
             mundariSubtitle = "उपूनिया (Upuniya)",
             category = FLNCategory.NUMERACY,
             icon = Icons.Default.Filter4
@@ -149,10 +149,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "num_5",
             hindiWord = "पाँच (5)",
-            hoWarangCiti = "𑣥 (𑣞𑣉𑣎𑣂𑣕𑣂)",
-            hoDevanagari = "मोड़ेया (५)",
-            hoPhonetic = "Modeya",
-            santhaliSubtitle = "मोँड़े (Monre)",
+            santaliOlChiki = "᱕ (ᱢᱚᱬᱮ)",
+            santaliDevanagari = "मोँड़े (५)",
+            santaliPhonetic = "Monre",
+            hoSubtitle = "मोड़ेया (Modeya)",
             mundariSubtitle = "मोड़ेया (Modeya)",
             category = FLNCategory.NUMERACY,
             icon = Icons.Default.Filter5
@@ -160,10 +160,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_water",
             hindiWord = "पानी",
-            hoWarangCiti = "𑣓𑣁𑣁𑣋𑣂",
-            hoDevanagari = "दाः",
-            hoPhonetic = "Dah",
-            santhaliSubtitle = "दाः (Dak)",
+            santaliOlChiki = "ᱫᱟᱜ",
+            santaliDevanagari = "दाः",
+            santaliPhonetic = "Dah",
+            hoSubtitle = "दाः (Dah)",
             mundariSubtitle = "दाः (Dah)",
             category = FLNCategory.LITERACY,
             icon = Icons.Default.WaterDrop
@@ -171,10 +171,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_tree",
             hindiWord = "पेड़ / वृक्ष",
-            hoWarangCiti = "𑣁𑣕𑣂",
-            hoDevanagari = "दारू",
-            hoPhonetic = "Daru",
-            santhaliSubtitle = "दारे (Dare)",
+            santaliOlChiki = "ᱫᱟᱨᱮ",
+            santaliDevanagari = "दारे",
+            santaliPhonetic = "Dare",
+            hoSubtitle = "दारू (Daru)",
             mundariSubtitle = "दारू (Daru)",
             category = FLNCategory.LITERACY,
             icon = Icons.Default.Park
@@ -182,10 +182,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_sun",
             hindiWord = "सूरज / सूर्य",
-            hoWarangCiti = "𑣣𑣂𑣊𑣂",
-            hoDevanagari = "सिंगी",
-            hoPhonetic = "Singi",
-            santhaliSubtitle = "सेंगेल/चांदो (Singi/Chando)",
+            santaliOlChiki = "ᱥᱤᱧ",
+            santaliDevanagari = "सिंगी",
+            santaliPhonetic = "Singi",
+            hoSubtitle = "सिंगी (Singi)",
             mundariSubtitle = "सिंगी (Singi)",
             category = FLNCategory.LITERACY,
             icon = Icons.Default.WbSunny
@@ -193,10 +193,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_cow",
             hindiWord = "गाय",
-            hoWarangCiti = "𑣃𑣜𑣂",
-            hoDevanagari = "उरिः",
-            hoPhonetic = "Urih",
-            santhaliSubtitle = "गाई (Gai)",
+            santaliOlChiki = "ᱜᱟᱹᱭ",
+            santaliDevanagari = "गाई",
+            santaliPhonetic = "Gai",
+            hoSubtitle = "उरिः (Urih)",
             mundariSubtitle = "उरिः (Urih)",
             category = FLNCategory.LITERACY,
             icon = Icons.Default.Pets
@@ -204,10 +204,10 @@ object FLNDictionary {
         FlashcardItem(
             id = "lit_bird",
             hindiWord = "चिड़िया / पक्षी",
-            hoWarangCiti = "𑣏𑣆𑣓𑣆",
-            hoDevanagari = "चेँड़े",
-            hoPhonetic = "Chende",
-            santhaliSubtitle = "चेँड़े (Chenre)",
+            santaliOlChiki = "ᱪᱮᱬᱮ",
+            santaliDevanagari = "चेँड़े",
+            santaliPhonetic = "Chenre",
+            hoSubtitle = "चेँड़े (Chende)",
             mundariSubtitle = "चेँड़े (Chende)",
             category = FLNCategory.LITERACY,
             icon = Icons.Default.FlutterDash
@@ -216,6 +216,8 @@ object FLNDictionary {
 
     fun findMatchingTranslation(inputHindi: String): TranslationResult {
         val trimmed = inputHindi.trim()
+
+        // 1. Check fixed classroom entries
         val exact = CLASSROOM_ENTRIES.firstOrNull {
             it.sourceHindi.equals(trimmed, ignoreCase = true) ||
             trimmed.contains(it.sourceHindi) ||
@@ -225,7 +227,7 @@ object FLNDictionary {
             return exact
         }
 
-        // Check flashcards
+        // 2. Check foundational flashcards
         val fc = FLASHCARD_ITEMS.firstOrNull {
             it.hindiWord.contains(trimmed, ignoreCase = true) ||
             trimmed.contains(it.hindiWord.split(" ").first())
@@ -233,24 +235,39 @@ object FLNDictionary {
         if (fc != null) {
             return TranslationResult(
                 sourceHindi = fc.hindiWord,
-                targetHoWarangCiti = fc.hoWarangCiti,
-                targetHoDevanagari = fc.hoDevanagari,
-                targetHoPhonetic = fc.hoPhonetic,
-                subtitleSanthali = fc.santhaliSubtitle,
+                targetSantaliOlChiki = fc.santaliOlChiki,
+                targetSantaliDevanagari = fc.santaliDevanagari,
+                targetSantaliPhonetic = fc.santaliPhonetic,
+                subtitleHo = fc.hoSubtitle,
                 subtitleMundari = fc.mundariSubtitle,
                 latencyMs = 180L
             )
         }
 
-        // Algorithmic / Lexicon fallback synthesis
+        // 3. Check 20K Corpus match
+        val corpusMatch = SantaliCorpusRepository.findBestMatch(trimmed)
+        if (corpusMatch != null) {
+            return TranslationResult(
+                sourceHindi = inputHindi,
+                targetSantaliOlChiki = corpusMatch.santaliOlChiki,
+                targetSantaliDevanagari = corpusMatch.santaliDevanagari.ifBlank { corpusMatch.santaliOlChiki },
+                targetSantaliPhonetic = corpusMatch.santaliPhonetic,
+                subtitleHo = "हो: ${corpusMatch.santaliPhonetic}",
+                subtitleMundari = "मुण्डारी: ${corpusMatch.santaliPhonetic}",
+                latencyMs = 210L,
+                fromCorpus = true
+            )
+        }
+
+        // 4. Fallback synthesis
         return TranslationResult(
             sourceHindi = inputHindi,
-            targetHoWarangCiti = "𑣓𑣉𑣎𑣉𑣜: $inputHindi",
-            targetHoDevanagari = "हो अनुवाद: $inputHindi",
-            targetHoPhonetic = "Ho anuvad: $inputHindi",
-            subtitleSanthali = "साँओताली: $inputHindi",
+            targetSantaliOlChiki = "ᱚᱞ ᱪᱤᱠᱤ: $inputHindi",
+            targetSantaliDevanagari = "संथाली अनुवाद: $inputHindi",
+            targetSantaliPhonetic = "Santali anuvad: $inputHindi",
+            subtitleHo = "हो: $inputHindi",
             subtitleMundari = "मुण्डारी: $inputHindi",
-            latencyMs = 450L
+            latencyMs = 420L
         )
     }
 }

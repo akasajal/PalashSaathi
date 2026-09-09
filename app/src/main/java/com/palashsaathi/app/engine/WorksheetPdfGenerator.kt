@@ -64,7 +64,7 @@ object WorksheetPdfGenerator {
         // Title & Header
         canvas.drawText("PalashSaathi - FLN Bilingual Worksheet (द्विभाषी अभ्यास पत्र)", 40f, y, paintHeader)
         y += 20f
-        canvas.drawText("${worksheet.titleHindi}  |  ${worksheet.titleHoDevanagari} (${worksheet.titleHoWarangCiti})", 40f, y, paintSubHeader)
+        canvas.drawText("${worksheet.titleHindi}  |  ${worksheet.titleSantaliDevanagari} (${worksheet.titleSantaliOlChiki})", 40f, y, paintSubHeader)
         y += 15f
         canvas.drawText("Level: ${worksheet.grade.label}  •  Category: ${worksheet.category.label}", 40f, y, paintSubHeader)
         y += 15f
@@ -93,11 +93,11 @@ object WorksheetPdfGenerator {
             // Number and Question in Hindi
             canvas.drawText("$num. ${exercise.questionHindi}", 50f, y + 5f, paintBold)
 
-            // Question in Ho (Devanagari + Warang Citi representation)
-            canvas.drawText("   हो (Ho): ${exercise.questionHoDevanagari}  •  ${exercise.questionHoWarangCiti}", 50f, y + 22f, paintBody)
+            // Question in Santali (Devanagari + Ol Chiki representation)
+            canvas.drawText("   संथाली (Santali): ${exercise.questionSantaliDevanagari}  •  ${exercise.questionSantaliOlChiki}", 50f, y + 22f, paintBody)
 
             // Hint & Answer line
-            canvas.drawText("   संकेत (Hint): ${exercise.hintHindi} / ${exercise.hintHo}", 50f, y + 36f, paintSubHeader)
+            canvas.drawText("   संकेत (Hint): ${exercise.hintHindi} / ${exercise.hintSantali}", 50f, y + 36f, paintSubHeader)
 
             // Answer checkbox or write area
             canvas.drawRect(470f, y - 5f, 545f, y + 30f, paintBox)

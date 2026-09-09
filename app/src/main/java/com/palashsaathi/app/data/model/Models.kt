@@ -3,19 +3,20 @@ package com.palashsaathi.app.data.model
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class ScriptType(val displayName: String) {
-    WARANG_CITI("Warang Citi (𑣓𑣉𑣎𑣉𑣜)"),
+    OL_CHIKI("Ol Chiki (ᱚᱞ ᱪᱤᱠᱤ)"),
     DEVANAGARI("Devanagari (देवनागरी)")
 }
 
 data class TranslationResult(
     val sourceHindi: String,
-    val targetHoWarangCiti: String,
-    val targetHoDevanagari: String,
-    val targetHoPhonetic: String,
-    val subtitleSanthali: String,
+    val targetSantaliOlChiki: String,
+    val targetSantaliDevanagari: String,
+    val targetSantaliPhonetic: String,
+    val subtitleHo: String,
     val subtitleMundari: String,
     val latencyMs: Long,
-    val audioDurationMs: Long = 1800L
+    val audioDurationMs: Long = 1800L,
+    val fromCorpus: Boolean = false
 )
 
 enum class FLNGrade(val label: String) {
@@ -33,10 +34,10 @@ enum class FLNCategory(val label: String) {
 data class FlashcardItem(
     val id: String,
     val hindiWord: String,
-    val hoWarangCiti: String,
-    val hoDevanagari: String,
-    val hoPhonetic: String,
-    val santhaliSubtitle: String,
+    val santaliOlChiki: String,
+    val santaliDevanagari: String,
+    val santaliPhonetic: String,
+    val hoSubtitle: String,
     val mundariSubtitle: String,
     val category: FLNCategory,
     val icon: ImageVector
@@ -45,10 +46,10 @@ data class FlashcardItem(
 data class WorksheetExercise(
     val id: String,
     val questionHindi: String,
-    val questionHoWarangCiti: String,
-    val questionHoDevanagari: String,
+    val questionSantaliOlChiki: String,
+    val questionSantaliDevanagari: String,
     val hintHindi: String,
-    val hintHo: String,
+    val hintSantali: String,
     val icon: ImageVector,
     val options: List<String> = emptyList(),
     val correctAnswer: String = ""
@@ -57,10 +58,18 @@ data class WorksheetExercise(
 data class GeneratedWorksheet(
     val id: String,
     val titleHindi: String,
-    val titleHoWarangCiti: String,
-    val titleHoDevanagari: String,
+    val titleSantaliOlChiki: String,
+    val titleSantaliDevanagari: String,
     val grade: FLNGrade,
     val category: FLNCategory,
     val exercises: List<WorksheetExercise>,
     val generatedTimestamp: Long = System.currentTimeMillis()
+)
+
+data class CorpusSentence(
+    val id: Int,
+    val english: String,
+    val santaliOlChiki: String,
+    val santaliDevanagari: String = "",
+    val santaliPhonetic: String = ""
 )

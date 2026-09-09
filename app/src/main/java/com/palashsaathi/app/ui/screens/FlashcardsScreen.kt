@@ -14,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -23,12 +22,11 @@ import com.palashsaathi.app.data.FLNDictionary
 import com.palashsaathi.app.data.model.FLNCategory
 import com.palashsaathi.app.data.model.FlashcardItem
 import com.palashsaathi.app.data.model.ScriptType
-import com.palashsaathi.app.ui.theme.*
 
 @Composable
 fun FlashcardsScreen(
     currentScript: ScriptType,
-    onSpeakHoAudio: (String, String) -> Unit,
+    onSpeakSantaliAudio: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedFilter by remember { mutableStateOf<FLNCategory?>(null) }
@@ -48,13 +46,13 @@ fun FlashcardsScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "चित्र व शब्द फ्लैशकार्ड (Visual Flashcards)",
+            text = "चित्र व शब्द फ्लैशकार्ड (Santali Visual Flashcards)",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Tap the speaker icon to hear authentic Ho pronunciation offline.",
+            text = "Tap the speaker icon to hear authentic Santali pronunciation offline.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -107,7 +105,7 @@ fun FlashcardsScreen(
                 FlashcardCard(
                     item = item,
                     currentScript = currentScript,
-                    onSpeak = { onSpeakHoAudio(item.hoPhonetic, item.hoDevanagari) }
+                    onSpeak = { onSpeakSantaliAudio(item.santaliPhonetic, item.santaliDevanagari) }
                 )
             }
         }
@@ -155,9 +153,9 @@ fun FlashcardCard(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Ho Word in Warang Citi or Devanagari
+            // Santali Word in Ol Chiki or Devanagari
             Text(
-                text = if (currentScript == ScriptType.WARANG_CITI) item.hoWarangCiti else item.hoDevanagari,
+                text = if (currentScript == ScriptType.OL_CHIKI) item.santaliOlChiki else item.santaliDevanagari,
                 style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary,
@@ -165,7 +163,7 @@ fun FlashcardCard(
             )
 
             Text(
-                text = "उच्चारण: ${item.hoPhonetic}",
+                text = "उच्चारण: ${item.santaliPhonetic}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -173,7 +171,7 @@ fun FlashcardCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Subtitle chips for Santhali & Mundari
+            // Subtitle chips for Ho & Mundari
             Surface(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(6.dp),
@@ -181,7 +179,7 @@ fun FlashcardCard(
             ) {
                 Column(modifier = Modifier.padding(6.dp)) {
                     Text(
-                        text = "संथाली: ${item.santhaliSubtitle}",
+                        text = "हो: ${item.hoSubtitle}",
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -206,7 +204,7 @@ fun FlashcardCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.VolumeUp,
-                    contentDescription = "Pronounce Ho",
+                    contentDescription = "Pronounce Santali",
                     tint = MaterialTheme.colorScheme.onSecondaryContainer,
                     modifier = Modifier.size(20.dp)
                 )

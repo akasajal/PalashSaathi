@@ -37,6 +37,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             var themeMode by remember { mutableStateOf(AppThemeMode.SYSTEM) }
 
+            // Initialize 20K Santali corpus asynchronously
+            LaunchedEffect(Unit) {
+                com.palashsaathi.app.data.SantaliCorpusRepository.initialize(applicationContext)
+            }
+
             PalashSaathiTheme(themeMode = themeMode) {
                 MainScreen(
                     audioEngine = audioEngine,

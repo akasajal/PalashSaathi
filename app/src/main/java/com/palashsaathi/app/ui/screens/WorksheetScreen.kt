@@ -13,7 +13,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,20 +37,20 @@ fun WorksheetScreen(
         GeneratedWorksheet(
             id = "${selectedGrade.name}_${selectedCategory.name}",
             titleHindi = if (selectedCategory == FLNCategory.NUMERACY) "संख्या पहचान और गिनती (1 से 5)" else "प्रारंभिक शब्द और चित्र मिलान",
-            titleHoWarangCiti = if (selectedCategory == FLNCategory.NUMERACY) "𑣚𑣆𑣊𑣁𑣜 𑣞𑣂𑣕𑣂 𑣁𑣕𑣆 𑣞𑣉𑣎𑣂𑣕𑣂" else "𑣞𑣃𑣕𑣃𑣞 𑣁𑣕𑣆 𑣏𑣂𑣕𑣂 𑣞𑣂𑣚𑣁𑣎",
-            titleHoDevanagari = if (selectedCategory == FLNCategory.NUMERACY) "लेखा और गिनती (मित् ते मोड़ेया)" else "शब्द और चित्र मिलान (संगी साला)",
+            titleSantaliOlChiki = if (selectedCategory == FLNCategory.NUMERACY) "ᱮᱞ ᱪᱤᱱᱦᱟᱹᱣ ᱟᱨ ᱞᱮᱠᱷᱟ (᱑ ᱠᱷᱚᱱ ᱕)" else "ᱮᱛᱚᱦᱚᱵ ᱟᱹᱲᱟᱹ ᱟᱨ ᱪᱤᱛᱟᱹᱨ ᱡᱚᱲᱟᱣ",
+            titleSantaliDevanagari = if (selectedCategory == FLNCategory.NUMERACY) "एल चिनहाव आर लेखा (१ खोन ५)" else "एतोहोब आड़ा आर चितार जोड़ाव",
             grade = selectedGrade,
             category = selectedCategory,
             exercises = if (selectedCategory == FLNCategory.NUMERACY) {
                 listOf(
-                    WorksheetExercise("ex1", "गिनकर सही संख्या पर गोला लगाओ", "𑣚𑣆𑣊𑣁𑣜 𑣕𑣆 𑣞𑣂𑣚𑣁𑣎 𑣚𑣆", "लेखा केते जोड़ावपे", "गिनती का अभ्यास", "मित्, बारिया, आपिया...", Icons.Default.Filter3, listOf("1", "2", "3"), "3"),
-                    WorksheetExercise("ex2", "सही संख्या की पहचान करो और लिखो", "𑣕𑣂𑣓𑣁𑣊 𑣂𑣚𑣂𑣊 𑣞𑣆𑣓𑣁𑣋? 𑣉𑣚𑣚𑣆", "तिनाः इपिल मेनाः? ओलपे", "संख्या पहचान", "इपिल लेखापे", Icons.Default.Filter4, listOf("2", "4", "5"), "4"),
-                    WorksheetExercise("ex3", "एक हाथ में कितनी उंगलियाँ होती हैं?", "𑣞𑣂𑣕𑣂 𑣕𑣂 𑣜𑣆 𑣕𑣂𑣓𑣁𑣊 𑣋𑣁𑣓𑣋𑣁?", "मित् ती रे तिनाः गांगा?", "उंगलियों की गिनती", "मोड़ेया (पाँच)", Icons.Default.Filter5, listOf("4", "5", "6"), "5")
+                    WorksheetExercise("ex1", "गिनकर सही संख्या पर गोला लगाओ", "ᱞᱮᱠᱷᱟ ᱠᱟᱛᱮ ᱴᱷᱤᱠ ᱮᱞ ᱨᱮ ᱜᱩᱞᱟᱹᱭ ᱢᱮ", "लेखा काते ठीक एल रे गुलाय मे", "गिनती का अभ्यास", "ᱢᱤᱫ, ᱵᱟᱨ, ᱯᱮ...", Icons.Default.Filter3, listOf("1", "2", "3"), "3"),
+                    WorksheetExercise("ex2", "सही संख्या की पहचान करो और लिखो", "ᱴᱷᱤᱠ ᱮᱞ ᱪᱤᱱᱦᱟᱹᱣ ᱠᱟᱛᱮ ᱚᱞ ᱢᱮ", "ठीक एल चिनहाव काते ओल मे", "संख्या पहचान", "ᱤᱯᱤᱞ ᱞᱮᱠᱷᱟᱭ ᱢᱮ", Icons.Default.Filter4, listOf("2", "4", "5"), "4"),
+                    WorksheetExercise("ex3", "एक हाथ में कितनी उंगलियाँ होती हैं?", "ᱢᱤᱫ ᱛᱤ ᱨᱮ ᱛᱤᱱᱟᱹᱜ ᱠᱟᱹᱴᱩᱵ ᱢᱮᱱᱟᱜᱼᱟ?", "मिद ती रे तिनाः काटुब मेनाःआ?", "उंगलियों की गिनती", "ᱢᱚᱬᱮ (पाँच)", Icons.Default.Filter5, listOf("4", "5", "6"), "5")
                 )
             } else {
                 listOf(
-                    WorksheetExercise("ex4", "'पानी' को हो भाषा में क्या कहते हैं?", "𑣓𑣁𑣁𑣋𑣂 𑣏𑣂𑣓𑣁𑣋 𑣞𑣆𑣓𑣁𑣋?", "'दाः' को क्या कहते हैं?", "पीने का पानी", "दाः (Dah)", Icons.Default.WaterDrop, listOf("दारू", "दाः", "सिंगी"), "दाः"),
-                    WorksheetExercise("ex5", "'गाय' के लिए सही शब्द चुनो", "𑣃𑣜𑣂 𑣁𑣕𑣆 𑣏𑣂𑣕𑣂 𑣞𑣂𑣚𑣁𑣎", "उरिः के चित्र से मिलाओ", "घरेलू पशु", "उरिः (Urih)", Icons.Default.Pets, listOf("चेँड़े", "उरिः", "कुल"), "उरिः")
+                    WorksheetExercise("ex4", "'पानी' को संथाली में क्या कहते हैं?", "'ᱫᱟᱜ' ᱫᱚ ᱦᱤᱱᱫᱤ ᱛᱮ ᱪᱮᱫ ᱠᱚ ᱢᱮᱛᱟᱜᱼᱟ?", "'दाः' को क्या कहते हैं?", "पीने का पानी", "ᱫᱟᱜ (Dah)", Icons.Default.WaterDrop, listOf("ᱫᱟᱨᱮ", "ᱫᱟᱜ", "ᱥᱤᱧ"), "ᱫᱟᱜ"),
+                    WorksheetExercise("ex5", "'गाय' के लिए सही शब्द चुनो", "'ᱜᱟᱹᱭ' ᱨᱮᱭᱟᱜ ᱪᱤᱛᱟᱹᱨ ᱥᱟᱞᱟᱜ ᱡᱚᱲᱟᱣ ᱢᱮ", "गाई के चित्र से मिलाओ", "घरेलू पशु", "ᱜᱟᱹᱭ (Gai)", Icons.Default.Pets, listOf("ᱪᱮᱬᱮ", "ᱜᱟᱹᱭ", "ᱠᱩᱞ"), "ᱜᱟᱹᱭ")
                 )
             }
         )
@@ -71,7 +70,7 @@ fun WorksheetScreen(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Generate printable Hindi <-> Ho worksheets with Warang Citi and Devanagari offline.",
+            text = "Generate printable Hindi <-> Santali worksheets with Ol Chiki and Devanagari offline.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -167,7 +166,7 @@ fun WorksheetScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = if (currentScript == ScriptType.WARANG_CITI) currentWorksheet.titleHoWarangCiti else currentWorksheet.titleHoDevanagari,
+                    text = if (currentScript == ScriptType.OL_CHIKI) currentWorksheet.titleSantaliOlChiki else currentWorksheet.titleSantaliDevanagari,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
@@ -205,7 +204,7 @@ fun WorksheetScreen(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "हो: ${if (currentScript == ScriptType.WARANG_CITI) ex.questionHoWarangCiti else ex.questionHoDevanagari}",
+                                text = "संथाली: ${if (currentScript == ScriptType.OL_CHIKI) ex.questionSantaliOlChiki else ex.questionSantaliDevanagari}",
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

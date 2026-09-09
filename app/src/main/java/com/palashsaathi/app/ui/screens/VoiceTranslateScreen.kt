@@ -14,9 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +27,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun VoiceTranslateScreen(
     currentScript: ScriptType,
-    onSpeakHoAudio: (String, String) -> Unit,
+    onSpeakSantaliAudio: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -122,9 +120,10 @@ fun VoiceTranslateScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "शिक्षक की आवाज़ (Hindi Input)",
+                        text = "शिक्षक की आवाज़ (Teacher Voice - Hindi):",
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold
                     )
                     if (isListening) {
                         Badge(containerColor = MaterialTheme.colorScheme.primary) {
@@ -164,8 +163,8 @@ fun VoiceTranslateScreen(
                             recognizedHindi = nextEntry.sourceHindi
                             currentResult = nextEntry
                             isTranslating = false
-                            // Instant voice playback in Ho
-                            onSpeakHoAudio(currentResult.targetHoPhonetic, currentResult.targetHoDevanagari)
+                            // Instant voice playback in Santali
+                            onSpeakSantaliAudio(currentResult.targetSantaliPhonetic, currentResult.targetSantaliDevanagari)
                         }
                     }
                 },
@@ -194,7 +193,7 @@ fun VoiceTranslateScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Primary Ho Translation Output Card (Coral Saffron Container)
+        // Primary Santali Translation Output Card (Coral Saffron Container)
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
@@ -209,29 +208,37 @@ fun VoiceTranslateScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "हो भाषा में ध्वनि (Primary Voice: Ho)",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "संथाली भाषा में ध्वनि (Primary Voice: Santali)",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (currentResult.fromCorpus) {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Badge(containerColor = MaterialTheme.colorScheme.secondary) {
+                                Text("20K Corpus", color = MaterialTheme.colorScheme.onSecondary, fontSize = 10.sp)
+                            }
+                        }
+                    }
                     IconButton(
                         onClick = {
-                            onSpeakHoAudio(currentResult.targetHoPhonetic, currentResult.targetHoDevanagari)
+                            onSpeakSantaliAudio(currentResult.targetSantaliPhonetic, currentResult.targetSantaliDevanagari)
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.VolumeUp,
-                            contentDescription = "Speak Ho",
+                            contentDescription = "Speak Santali",
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.size(28.dp)
                         )
                     }
                 }
 
-                // Warang Citi / Devanagari text based on current toggle
+                // Ol Chiki / Devanagari text based on current toggle
                 Text(
-                    text = if (currentScript == ScriptType.WARANG_CITI) currentResult.targetHoWarangCiti else currentResult.targetHoDevanagari,
+                    text = if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliOlChiki else currentResult.targetSantaliDevanagari,
                     style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.ExtraBold
@@ -241,7 +248,7 @@ fun VoiceTranslateScreen(
 
                 // Transliteration & Pronunciation guide
                 Text(
-                    text = "उच्चारण (Pronunciation): ${currentResult.targetHoPhonetic}  •  ${if (currentScript == ScriptType.WARANG_CITI) currentResult.targetHoDevanagari else currentResult.targetHoWarangCiti}",
+                    text = "उच्चारण (Pronunciation): ${currentResult.targetSantaliPhonetic}  •  ${if (currentScript == ScriptType.OL_CHIKI) currentResult.targetSantaliDevanagari else currentResult.targetSantaliOlChiki}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f)
                 )
@@ -250,7 +257,7 @@ fun VoiceTranslateScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Auxiliary Subtitle HUD (Santhali and Mundari) with Yellowish Highlights
+        // Auxiliary Subtitle HUD (Ho and Mundari) with Yellowish Highlights
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -283,16 +290,16 @@ fun VoiceTranslateScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                // Santhali Subtitle Strip
+                // Ho Subtitle Strip
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "संथाली (Santhali): ",
+                        text = "हो (Ho): ",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = currentResult.subtitleSanthali,
+                        text = currentResult.subtitleHo,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
@@ -336,7 +343,7 @@ fun VoiceTranslateScreen(
                 onClick = {
                     recognizedHindi = item.sourceHindi
                     currentResult = item
-                    onSpeakHoAudio(item.targetHoPhonetic, item.targetHoDevanagari)
+                    onSpeakSantaliAudio(item.targetSantaliPhonetic, item.targetSantaliDevanagari)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -358,7 +365,7 @@ fun VoiceTranslateScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = if (currentScript == ScriptType.WARANG_CITI) item.targetHoWarangCiti else item.targetHoDevanagari,
+                            text = if (currentScript == ScriptType.OL_CHIKI) item.targetSantaliOlChiki else item.targetSantaliDevanagari,
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.primary
                         )

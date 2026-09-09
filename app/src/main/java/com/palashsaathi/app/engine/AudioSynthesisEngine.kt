@@ -30,19 +30,20 @@ class AudioSynthesisEngine(private val context: Context) {
     }
 
     /**
-     * Speaks the Ho phonetic string. Uses native TTS if available,
-     * or generates an audible acoustic acoustic waveform directly via AudioTrack.
+     * Speaks the Santali phonetic or Devanagari string. Uses native TTS if available,
+     * or generates an audible acoustic waveform directly via AudioTrack.
      */
-    suspend fun speakHo(phoneticText: String, devanagariText: String) = withContext(Dispatchers.Default) {
+    suspend fun speakSantali(phoneticText: String, devanagariText: String) = withContext(Dispatchers.Default) {
         if (isTtsReady && tts != null) {
-            // Speak phonetic or devanagari approximation
             val textToSpeak = devanagariText.ifEmpty { phoneticText }
-            tts?.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, "ho_audio_id")
+            tts?.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, "santali_audio_id")
         } else {
-            // High-speed low-latency acoustic feedback via AudioTrack
             playAcousticChime()
         }
     }
+
+    // Alias for backward compatibility
+    suspend fun speakHo(phoneticText: String, devanagariText: String) = speakSantali(phoneticText, devanagariText)
 
     /**
      * Plays a pleasant multi-tone chime indicating voice response completion
