@@ -13,6 +13,14 @@ The application indexes a **20,000-sentence Santali-English parallel training co
 
 ---
 
+## Screenshots
+
+| Landing Synopsis | Voice Translation | Visual Flashcards | FLN Worksheet |
+| :---: | :---: | :---: | :---: |
+| <img src="screenshot/00_landing_synopsis.png" width="200"/> | <img src="screenshot/01_voice_translation.png" width="200"/> | <img src="screenshot/02_visual_flashcards.png" width="200"/> | <img src="screenshot/03_fln_worksheets.png" width="200"/> |
+
+---
+
 ## Core Capabilities
 
 ### 1. 100% Offline Edge Operation
