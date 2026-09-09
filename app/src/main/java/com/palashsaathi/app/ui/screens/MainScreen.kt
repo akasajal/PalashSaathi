@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.palashsaathi.app.R
+import com.palashsaathi.app.data.AppPreferencesRepository
 import com.palashsaathi.app.data.model.ScriptType
 import com.palashsaathi.app.engine.AudioSynthesisEngine
 import com.palashsaathi.app.ui.theme.*
@@ -33,8 +34,8 @@ enum class AppTab(
 ) {
     VOICE("बोलें", "Voice", Icons.Default.Mic),
     WORKSHEET("अभ्यास", "Worksheet", Icons.Default.Description),
-    FLASHCARDS("कार्ड", "Cards", Icons.Default.Style),
-    PHRASEBOOK("शब्दावली", "Vocab", Icons.Default.MenuBook),
+    CARDS("फ्लैशकार्ड", "Cards", Icons.Default.Style),
+    PHRASEBOOK("वाक्य", "Vocab", Icons.Default.MenuBook),
     SETTINGS("सेटिंग्स", "Settings", Icons.Default.Settings);
 
     val label: String get() = labelHindi
@@ -48,14 +49,15 @@ enum class AppTab(
 @Composable
 fun MainScreen(
     audioEngine: AudioSynthesisEngine,
-    currentThemeMode: AppThemeMode,
-    onThemeModeChanged: (AppThemeMode) -> Unit,
+    prefsRepository: AppPreferencesRepository,
     modifier: Modifier = Modifier
 ) {
+    val currentThemeMode by prefsRepository.themeMode.collectAsState()
+    val currentLanguageMode by prefsRepository.languageMode.collectAsState()
+    val currentScript by prefsRepository.scriptType.collectAsState()
+    val showLandingSynopsis by prefsRepository.showLandingSynopsis.collectAsState()
+
     var selectedTab by remember { mutableStateOf(AppTab.VOICE) }
-    var currentScript by remember { mutableStateOf(ScriptType.OL_CHIKI) }
-    var currentLanguageMode by remember { mutableStateOf(com.palashsaathi.app.data.model.LanguagePairMode.HINDI_TO_SANTALI) }
-    var showLandingSynopsis by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
     val onSpeakSantaliAudio: (String, String) -> Unit = { phonetic, devanagari ->
@@ -121,11 +123,12 @@ fun MainScreen(
                     // Script Switcher Button (Ol Chiki <-> Devanagari)
                     OutlinedButton(
                         onClick = {
-                            currentScript = if (currentScript == ScriptType.OL_CHIKI) {
+                            val nextScript = if (currentScript == ScriptType.OL_CHIKI) {
                                 ScriptType.DEVANAGARI
                             } else {
                                 ScriptType.OL_CHIKI
                             }
+                            prefsRepository.setScriptType(nextScript)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -214,9 +217,9 @@ fun MainScreen(
                 )
                 AppTab.SETTINGS -> SettingsScreen(
                     currentThemeMode = currentThemeMode,
-                    onThemeModeChanged = onThemeModeChanged,
+                    onThemeModeChanged = { prefsRepository.setThemeMode(it) },
                     currentLanguageMode = currentLanguageMode,
-                    onLanguageModeChanged = { currentLanguageMode = it }
+                    onLanguageModeChanged = { prefsRepository.setLanguageMode(it) }
                 )
             }
         }
@@ -228,7 +231,7 @@ fun MainScreen(
             exit = fadeOut(animationSpec = tween(600))
         ) {
             LandingSynopsisScreen(
-                onDismiss = { showLandingSynopsis = false }
+                onDismiss = { prefsRepository.dismissLandingSynopsis() }
             )
         }
     }

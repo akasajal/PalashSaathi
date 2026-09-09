@@ -8,9 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat
+import com.palashsaathi.app.data.AppPreferencesRepository
 import com.palashsaathi.app.engine.AudioSynthesisEngine
 import com.palashsaathi.app.ui.screens.MainScreen
-import com.palashsaathi.app.ui.theme.AppThemeMode
 import com.palashsaathi.app.ui.theme.PalashSaathiTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,7 +35,8 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            var themeMode by remember { mutableStateOf(AppThemeMode.SYSTEM) }
+            val prefsRepository = remember { AppPreferencesRepository.getInstance(applicationContext) }
+            val themeMode by prefsRepository.themeMode.collectAsState()
 
             // Initialize 20K Santali corpus asynchronously
             LaunchedEffect(Unit) {
@@ -45,8 +46,7 @@ class MainActivity : ComponentActivity() {
             PalashSaathiTheme(themeMode = themeMode) {
                 MainScreen(
                     audioEngine = audioEngine,
-                    currentThemeMode = themeMode,
-                    onThemeModeChanged = { newMode -> themeMode = newMode }
+                    prefsRepository = prefsRepository
                 )
             }
         }
